@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>職場人格特質問卷｜五大人格 × MBTI 雙重分析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDEFF2;
+    --sheet:#FFFFFF;
+    --ink:#1F2430;
+    --ink-soft:#5A6072;
+    --line:#CBCFD8;
+    --seal:#C8442D;
+    --seal-dark:#a8341f;
+    --seal-soft:rgba(200,68,45,0.08);
+    --dim-stability:#3A6EA5;
+    --dim-agreeable:#3F8F66;
+    --dim-conscientious:#C68A2E;
+    --dim-extraversion:#B5466B;
+    --dim-openness:#7A5BA6;
+    --font-display:'Noto Serif TC', serif;
+    --font-body:'Noto Sans TC', -apple-system, sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--paper) 0%, var(--paper) 100%),
+      repeating-linear-gradient(0deg, rgba(31,36,48,0.025) 0px, rgba(31,36,48,0.025) 1px, transparent 1px, transparent 28px);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.65;
+    min-height:100vh;
+    padding:32px 16px 64px;
+  }
+  .wrap{max-width:600px;margin:0 auto;}
+  .sheet{
+    background:var(--sheet);
+    border:1px solid var(--line);
+    border-top:4px solid var(--ink);
+    box-shadow:0 1px 2px rgba(31,36,48,0.04), 0 12px 28px -16px rgba(31,36,48,0.18);
+    padding:36px 28px;
+  }
+  @media (min-width:480px){ .sheet{padding:44px 40px;} }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:flex;align-items:center;gap:8px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:18px;height:1px;background:var(--seal);display:inline-block;}
+
+  h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:28px;
+    line-height:1.3;
+    margin:0 0 14px;
+    letter-spacing:.01em;
+  }
+  .lede{font-size:15px;color:var(--ink-soft);margin:0 0 20px;}
+
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:10px 18px;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+    margin-bottom:26px;
+  }
+  .meta-row span b{color:var(--seal);}
+
+  .btn{
+    appearance:none;border:none;cursor:pointer;
+    font-family:var(--font-body);font-weight:700;font-size:15px;
+    padding:14px 26px;
+    transition:transform .12s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    letter-spacing:.01em;
+  }
+  .btn:focus-visible{outline:2px solid var(--seal);outline-offset:2px;}
+  .btn-primary{background:var(--seal);color:#fff;width:100%;}
+  .btn-primary:hover{background:var(--seal-dark);}
+  .btn-primary:disabled{background:#D8DBE1;color:#9499A6;cursor:not-allowed;}
+  .btn-primary:active:not(:disabled){transform:scale(.99);}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink);}
+  .btn-ghost:hover{background:var(--ink);color:#fff;}
+  .btn-ghost:disabled{opacity:.35;cursor:not-allowed;}
+  .btn-small{padding:9px 16px;font-size:13px;}
+
+  .disclaimer{
+    font-size:12px;color:var(--ink-soft);margin-top:22px;
+    border-left:2px solid var(--line);padding-left:12px;
+  }
+
+  /* ---- quiz ---- */
+  .part-tag{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--seal);margin-bottom:12px;}
+  .progress-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+  .progress-label{font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);letter-spacing:.04em;}
+  .progress-track{height:5px;background:var(--line);margin-bottom:34px;position:relative;}
+  .progress-fill{height:100%;background:var(--seal);transition:width .35s ease;}
+
+  .timer-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .timer-label{font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);letter-spacing:.04em;}
+  .timer-display{
+    font-family:var(--font-mono);font-size:12.5px;font-weight:700;letter-spacing:.06em;
+    color:var(--ink-soft);transition:color .3s;
+  }
+  .timer-display.urgent{color:var(--seal);animation:timerPulse 1s ease-in-out infinite;}
+  @keyframes timerPulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+  .timer-track{height:4px;background:var(--line);margin-bottom:28px;position:relative;}
+  .timer-fill{height:100%;background:var(--ink-soft);transition:width 1s linear;}
+
+  .question-text{
+    font-family:var(--font-display);font-weight:600;font-size:21px;
+    line-height:1.55;margin:0 0 32px;min-height:108px;
+  }
+
+  .bubble-row{display:flex;justify-content:space-between;gap:6px;margin-bottom:30px;}
+  .bubble-col{display:flex;flex-direction:column;align-items:center;gap:9px;flex:1;}
+  .bubble{
+    width:38px;height:38px;border-radius:50%;
+    border:2px solid var(--ink);background:transparent;
+    font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:background .15s,color .15s,border-color .15s,transform .1s;
+  }
+  .bubble:hover{border-color:var(--seal);}
+  .bubble:focus-visible{outline:2px solid var(--seal);outline-offset:2px;}
+  .bubble[aria-pressed="true"]{background:var(--seal);border-color:var(--seal);color:#fff;transform:scale(1.05);}
+  .bubble-label{font-size:10.5px;color:var(--ink-soft);text-align:center;line-height:1.3;max-width:64px;}
+
+  .nav-row{display:flex;gap:12px;}
+  .nav-row .btn-ghost{flex:0 0 110px;}
+  .nav-row .btn-primary{flex:1;}
+
+  /* ---- results ---- */
+  .stamp-wrap{display:flex;justify-content:center;margin-bottom:6px;}
+  .stamp{
+    width:128px;height:128px;border-radius:50%;
+    border:3px double var(--seal);color:var(--seal);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:var(--font-mono);text-align:center;
+    transform:rotate(-8deg);opacity:.88;mix-blend-mode:multiply;
+    animation:stampDown .55s cubic-bezier(.34,1.56,.64,1);
+  }
+  .stamp b{font-size:15px;letter-spacing:.06em;font-weight:700;}
+  .stamp span{font-size:9.5px;letter-spacing:.08em;margin-top:3px;}
+  @keyframes stampDown{
+    from{transform:rotate(-8deg) scale(2.4);opacity:0;}
+    to{transform:rotate(-8deg) scale(1);opacity:.88;}
+  }
+  @media (prefers-reduced-motion: reduce){ .stamp{animation:none;} }
+
+  .mbti-headline{text-align:center;margin:20px 0 0;}
+  .mbti-code{font-family:var(--font-mono);font-weight:700;font-size:46px;letter-spacing:.08em;color:var(--ink);margin:0;}
+  .mbti-nickname{font-family:var(--font-display);font-weight:700;font-size:20px;margin:8px 0 4px;color:var(--seal);}
+  .mbti-tagline{font-size:13.5px;color:var(--ink-soft);margin:0;}
+
+  .conclusion-box{
+    background:var(--seal-soft);
+    border-left:3px solid var(--seal);
+    padding:18px 18px;
+    margin:26px 0 6px;
+    font-size:14px;
+  }
+  .conclusion-box p{margin:0 0 10px;}
+  .conclusion-box p:last-child{margin-bottom:0;}
+
+  .section-label{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);margin:34px 0 14px;display:flex;align-items:center;gap:8px;
+  }
+  .section-label::before{content:"";width:14px;height:1px;background:var(--line);}
+
+  .trait-list{list-style:none;margin:0 0 4px;padding:0;}
+  .trait-list li{display:flex;gap:10px;font-size:13.5px;padding:9px 0;border-top:1px solid var(--line);align-items:baseline;}
+  .trait-list li:first-child{border-top:none;}
+  .trait-mark{font-weight:700;flex:0 0 14px;}
+  .trait-list.strengths .trait-mark{color:var(--seal);}
+  .trait-list.watch .trait-mark{color:var(--ink-soft);}
+  .trait-tag{font-family:var(--font-mono);font-size:10px;color:var(--ink-soft);flex:0 0 64px;}
+
+  .radar{width:100%;max-width:340px;display:block;margin:0 auto 8px;}
+  .radar .grid{fill:none;stroke:var(--line);stroke-width:1;}
+  .radar .axis{stroke:var(--line);stroke-width:1;}
+  .radar .score{fill:rgba(200,68,45,0.14);stroke:var(--seal);stroke-width:2;}
+  .radar .axis-label{font-family:var(--font-mono);font-size:13px;fill:var(--ink-soft);}
+
+  .dim-card{border-top:1px solid var(--line);padding:20px 0;}
+  .dim-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
+  .dim-name-wrap{display:flex;align-items:center;gap:9px;}
+  .dim-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;}
+  .dim-name{font-family:var(--font-display);font-weight:700;font-size:16.5px;}
+  .dim-score{font-family:var(--font-mono);font-weight:600;font-size:15px;}
+  .dim-facets{font-size:11.5px;color:var(--ink-soft);margin:0 0 10px;letter-spacing:.01em;}
+  .dim-bar-track{height:8px;background:var(--paper);border:1px solid var(--line);margin-bottom:12px;}
+  .dim-bar-fill{height:100%;transition:width .5s ease;}
+  .dim-text{font-size:13.5px;color:var(--ink);margin:0;}
+  .badge{
+    display:inline-block;font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;
+    padding:3px 8px;border:1px solid currentColor;margin-bottom:8px;
+  }
+  .badge.high{color:var(--seal);}
+  .badge.low{color:var(--ink-soft);}
+
+  .pair-card{border-top:1px solid var(--line);padding:18px 0;}
+  .pair-labels{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;margin-bottom:8px;color:var(--ink-soft);}
+  .pair-labels .dominant{color:var(--seal);font-weight:700;}
+  .pair-track{height:8px;background:var(--line);position:relative;margin-bottom:10px;}
+  .pair-fill{height:100%;background:var(--ink);}
+  .pair-desc{font-size:13px;color:var(--ink);margin:0;}
+
+  .result-actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;}
+  .result-actions .btn{flex:1 1 140px;}
+  .copy-note{font-family:var(--font-mono);font-size:11.5px;color:var(--seal);margin-top:8px;text-align:center;min-height:14px;}
+
+  /* ---- name / admin fields ---- */
+  .field-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--ink-soft);margin-bottom:6px;display:block;text-transform:uppercase;}
+  .field-input{
+    width:100%;font-family:var(--font-body);font-size:15px;color:var(--ink);
+    border:1.5px solid var(--line);background:var(--paper);
+    padding:12px 14px;margin-bottom:18px;
+  }
+  .field-input:focus{outline:none;border-color:var(--seal);background:#fff;}
+  textarea.field-input{resize:vertical;min-height:90px;font-family:var(--font-mono);font-size:12.5px;line-height:1.5;}
+  .error-text{color:var(--seal);font-size:12.5px;margin:-8px 0 16px;}
+  .code-box{
+    font-family:var(--font-mono);font-size:11.5px;line-height:1.6;color:var(--ink);
+    background:var(--paper);border:1.5px solid var(--line);padding:16px;
+    word-break:break-all;margin-bottom:16px;max-height:160px;overflow-y:auto;
+  }
+  .candidate-name{font-family:var(--font-display);font-weight:700;font-size:20px;margin:0 0 4px;}
+  .candidate-meta{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-soft);margin:0 0 8px;}
+  .mailto-btn{display:block;text-align:center;text-decoration:none;margin-top:12px;}
+  .trait-list.flags .trait-mark{color:var(--seal);}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const DIMENSIONS = [
+  { key:'stability', name:'情緒穩定', short:'情穩', facets:'抗壓性・情緒調適・樂觀性・適應性', color:'var(--dim-stability)', hex:'#3A6EA5',
+    archetype:'沉穩抗壓型', archetypeDesc:'你是團隊裡最穩的那個人，越混亂的場面越需要你坐鎮。',
+    strengthPhrase:'壓力下仍能維持穩定輸出，是團隊的定錨者', watchPhrase:'面對高壓或密集批評時，可以多給自己一點調適時間',
+    probe:'面談可詢問應試者過去面對高壓 deadline 或客訴情境時的應對方式，藉此觀察其情緒調節與恢復節奏，並評估該職務是否能提供足夠的支持與緩衝。',
+    high:'你在壓力情境下通常能保持冷靜，情緒起伏不大，遇到突發狀況也能快速調整步調、繼續推進工作。面試時可以舉出曾在高壓專案或客訴情境中仍維持穩定表現的具體例子，這會是你的加分項。',
+    mid:'多數時候你能控制情緒，但在特別緊湊或衝突的情境下，仍會感受到一定程度的壓力與波動。可以練習在面試前先深呼吸，並準備一兩個曾經調適壓力成功的小故事。',
+    low:'你對壓力與批評較為敏感，情緒容易受外界影響而起伏。面試前建議多做幾次模擬演練，熟悉問題後緊張感會降低；也可以誠實但有方法地說明自己重視細節、容易投入情境的特質。' },
+  { key:'agreeable', name:'親和樂群', short:'親和', facets:'社交性・合作性・互賴性', color:'var(--dim-agreeable)', hex:'#3F8F66',
+    archetype:'溫暖協作型', archetypeDesc:'你擅長搭橋，總能讓不同立場的人坐下來好好說話。',
+    strengthPhrase:'擅長建立信任、促成團隊合作', watchPhrase:'與人意見不合時，可以練習更直接表達自己的立場',
+    probe:'面談可詢問應試者與同事意見不合時的處理方式，觀察其衝突化解風格，尤其留意該職務是否需要高頻率的跨部門協作。',
+    high:'你樂於配合團隊、重視人際和諧，容易與同事建立信任關係，適合需要大量協作或客戶接觸的工作。面試時可強調你過去成功協調不同意見、促成團隊合作的經驗。',
+    mid:'你在合作與堅持己見之間能取得平衡，視情境調整配合程度。可以準備一個你同時兼顧團隊和諧與個人專業判斷的例子。',
+    low:'你較重視自己的判斷與效率，不一定優先考量他人感受，這在需要獨立決策的角色中是優點。面試時可說明你如何在堅持專業判斷的同時，仍能有效與他人溝通協調。' },
+  { key:'conscientious', name:'勤勉審慎', short:'審慎', facets:'秩序性・謹慎性・負責任・堅毅性', color:'var(--dim-conscientious)', hex:'#C68A2E',
+    archetype:'嚴謹執行型', archetypeDesc:'交給你的事，大家都放心，因為你說到一定做到。',
+    strengthPhrase:'做事有條理、值得託付，交付品質穩定', watchPhrase:'面對高度彈性、規則模糊的任務時可以多預留適應空間',
+    probe:'面談可請應試者說明過去如何規劃一項多步驟任務的時程與細節確認方式，並請對方舉一個曾因疏忽而需要補救的例子，藉此觀察其規劃能力與細心度。',
+    high:'你做事有條理、重視承諾與品質，遇到困難任務也能堅持完成。這是多數企業招募時非常看重的特質，面試時可具體舉出你規劃流程、準時交付成果的案例。',
+    mid:'你大致上能規劃並完成工作，但在動力較低或缺乏監督時，執行力可能會打折。可以準備說明你如何透過待辦清單或提醒機制維持產出穩定。',
+    low:'你偏好彈性、隨機應變，對嚴格流程與規範感到束縛。若應徵的職務重視紀律與細節，建議在面試中強調你彈性解決問題的能力，並說明你如何補強執行細節（例如使用工具或請同事互相確認）。' },
+  { key:'extraversion', name:'外向實踐', short:'外向', facets:'活力・企圖心・表現性・領導性', color:'var(--dim-extraversion)', hex:'#B5466B',
+    archetype:'積極領導型', archetypeDesc:'你天生有股推著大家往前走的energy，很難讓人忽視。',
+    strengthPhrase:'樂於主動表達與帶動團隊氣氛', watchPhrase:'需要練習在資源有限時，依然能保持耐心深耕',
+    probe:'若該職務需要主動對外溝通或公開表達，可請應試者舉例說明過去在會議或客戶面前主動發言的經驗，觀察其外顯表現是否符合職務需求。',
+    high:'你充滿活力，喜歡主動表達、影響他人，在團體中常扮演發起者或領導者的角色。面試時可分享你主動爭取機會、帶領團隊達成目標的經驗。',
+    mid:'你能視場合調整外顯程度，需要時可以主動發言，但也樂於擔任支援角色。可以準備一個你主動站出來解決問題的例子，平衡你內斂的一面。',
+    low:'你偏好低調、深思熟慮後再行動，較少主動成為鎂光燈焦點。這類特質很適合需要專注與深度思考的工作，面試時可強調你在幕後扎實的貢獻與觀察力。' },
+  { key:'openness', name:'經驗開放', short:'開放', facets:'冒險性・求變性・創造性・同理心', color:'var(--dim-openness)', hex:'#7A5BA6',
+    archetype:'創新探索型', archetypeDesc:'你總在問「還有沒有更好的方法」，是團隊的點子來源。',
+    strengthPhrase:'樂於嘗試新方法，能為團隊帶來新觀點', watchPhrase:'面對需要高度一致、重複執行的工作可以提前建立耐心機制',
+    probe:'若職務需要因應快速變動或導入新工具流程，可請應試者描述一次面對重大改變時的應對方式，觀察其彈性與學習意願。',
+    high:'你對新事物、新方法抱持好奇心，樂於嘗試與創新，思考角度多元。面試時可以分享你提出創新解法或主動學習新技能的具體案例。',
+    mid:'你在維持既有做法與嘗試新方法之間保持彈性，視情況決定是否改變。可以準備一個你在熟悉流程中加入小幅改良的例子。',
+    low:'你偏好穩定、已驗證有效的做法，重視一致性與可預測性。這在需要嚴謹遵循標準作業流程的職務中是優勢，面試時可強調你對既有流程的熟稔與穩定輸出的能力。' },
+];
+
+const LIKERT = ['非常不同意','不同意','普通','同意','非常同意'];
+
+const MBTI_PAIRS = [
+  { key:'EI', left:'E', right:'I', leftLabel:'外向 E', rightLabel:'內向 I',
+    leftDesc:'從人際互動與外部世界獲取能量，喜歡邊做邊想、主動表達。',
+    rightDesc:'從獨立思考與內在世界獲取能量，喜歡先想清楚再行動、偏好深度而非廣度。' },
+  { key:'SN', left:'S', right:'N', leftLabel:'實感 S', rightLabel:'直覺 N',
+    leftDesc:'重視具體事實與實際經驗，做事務實、注重細節與可執行性。',
+    rightDesc:'重視可能性與抽象連結，擅長看見模式、構想未來與新方案。' },
+  { key:'TF', left:'T', right:'F', leftLabel:'思考 T', rightLabel:'情感 F',
+    leftDesc:'決策時優先依據邏輯與客觀標準，重視效率與公平的規則。',
+    rightDesc:'決策時優先考量人的感受與價值觀，重視和諧與個人意義。' },
+  { key:'JP', left:'J', right:'P', leftLabel:'判斷 J', rightLabel:'感知 P',
+    leftDesc:'喜歡計畫與明確結構，傾向提早做決定、按部就班完成任務。',
+    rightDesc:'喜歡保持彈性與開放選項，傾向邊走邊調整、擅長應變。' },
+];
+
+const MBTI_TYPES = {
+  ISTJ:{nickname:'務實考核者', tagline:'重視規範與證據，是組織裡最值得信賴的執行後盾。',
+    strengths:['做事嚴謹、按部就班，交付品質穩定','重視承諾與紀律，是團隊中可靠的執行者','擅長從制度與流程角度把關風險'],
+    watch:['面對快速變動或模糊指令時容易感到不適','對未經驗證的新方法接受度較低，可留意彈性']},
+  ISFJ:{nickname:'溫和守護者', tagline:'安靜地把每個人和每件小事都照顧好。',
+    strengths:['細心體貼，擅長記住並滿足團隊與客戶的實際需求','責任感強，會默默把事情做到完整','在穩定的關係與環境中發揮高度可靠性'],
+    watch:['不擅長直接表達不同意見，容易過度遷就他人','面對衝突或變動時，需要多一點時間調適']},
+  INFJ:{nickname:'理念架構者', tagline:'用溫暖的方式，悄悄推動一個更理想的願景。',
+    strengths:['能洞察他人未說出口的需求，溝通有同理心','重視意義與長期願景，能為團隊注入方向感','在一對一深度溝通與輔導上特別有感染力'],
+    watch:['容易因過度投入理想而忽略現實限制','面對大量瑣碎行政或衝突場合容易耗能']},
+  INTJ:{nickname:'策略構築者', tagline:'喜歡先在腦中把整個系統推演一遍，再動手。',
+    strengths:['擅長制定長期策略與系統性解法','獨立思考能力強，能快速看穿問題本質','對品質與邏輯一致性有高標準，能把關方向'],
+    watch:['對流程與情感層面的耐性較低，需留意團隊感受','可能因堅持己見而忽略他人提出的替代方案']},
+  ISTP:{nickname:'實務排解者', tagline:'哪裡出問題，動手拆開看一看就懂了。',
+    strengths:['擅長即時排解實務問題，動手能力強','面對壓力時冷靜務實，不易情緒化','能在有限資源下找到可行的解法'],
+    watch:['對長期規劃與例行報告的興趣較低','表達想法時偏簡短，需留意團隊溝通的完整度']},
+  ISFP:{nickname:'細膩實踐者', tagline:'用自己的步調，把手上的事情做得剛剛好。',
+    strengths:['細膩、有美感與品質意識，作品經得起檢視','待人溫和、不強勢，容易與不同的人合作','重視當下的真實感受，工作態度誠懇'],
+    watch:['不擅長公開表達意見或爭取資源，容易被忽略','面對長期高壓或高衝突環境，續航力需要關注']},
+  INFP:{nickname:'價值倡議者', tagline:'在意的事，會用一輩子的認真去對待。',
+    strengths:['高度認同工作意義時，會展現驚人的投入與創意','善於理解他人觀點，溝通中帶有溫度','對價值衝突敏感，能提早察覺團隊潛在問題'],
+    watch:['缺乏意義感的瑣碎任務容易讓動力下降','面對直接的批評或衝突，需要時間消化情緒']},
+  INTP:{nickname:'邏輯探索者', tagline:'喜歡把一個問題拆到最底層，搞懂為什麼。',
+    strengths:['擅長分析複雜問題，提出有創意的理論解法','對知識與邏輯一致性要求高，能把關品質','獨立作業能力強，適合需要深度鑽研的任務'],
+    watch:['對截止日期與行政細節的敏感度較低','想法成熟前不太願意對外溝通，可能讓進度不透明']},
+  ESTP:{nickname:'行動推進者', tagline:'想清楚不如先試試看，邊做邊修正。',
+    strengths:['反應快、行動力強，擅長在第一線解決突發狀況','善於說服與帶動現場氣氛，談判力強','能在壓力與不確定中保持靈活'],
+    watch:['長期規劃與細節文件容易被忽略','容易在追求效率時跳過必要的審核步驟']},
+  ESFP:{nickname:'活力鼓動者', tagline:'走進房間，氣氛就熱起來了。',
+    strengths:['熱情外向，擅長活絡團隊與客戶關係','適應力強，能在多變的環境中保持正向','擅長透過實際互動快速建立信任'],
+    watch:['面對需要長時間獨自鑽研的任務容易分心','計畫性與紀律性需要額外的工具或夥伴協助']},
+  ENFP:{nickname:'靈感推廣者', tagline:'看到一個可能性，就想拉著大家一起去試。',
+    strengths:['創意豐富，擅長激發團隊的想像力與熱情','人際敏銳度高，能快速與不同的人建立連結','面對改變時適應力強，樂於嘗試新方向'],
+    watch:['興趣容易分散，需要外部結構協助收斂與落地','對重複性高的細節工作容易感到不耐']},
+  ENTP:{nickname:'辯證創新者', tagline:'喜歡在討論中不斷挑戰「為什麼一定要這樣做」。',
+    strengths:['思維靈活，擅長提出創新觀點與替代方案','擅長辯論與說服，能挑戰既有假設找出盲點','面對複雜模糊的問題依然能保持興趣與動力'],
+    watch:['容易因追求新點子而難以堅持完成既有計畫','直接的提問風格有時會讓他人感到被挑戰']},
+  ESTJ:{nickname:'制度推動者', tagline:'把目標拆成清單，然後一項一項打勾完成。',
+    strengths:['執行力強，擅長建立制度與標準化流程','目標導向明確，能有效分配資源達成績效','在管理與監督角色上展現高度可靠性'],
+    watch:['對模糊或情感導向的議題耐性較低','推動效率時可能忽略團隊成員的個別感受']},
+  ESFJ:{nickname:'團隊照護者', tagline:'記得每個人的生日，也記得每件事的進度。',
+    strengths:['人際協調能力強，擅長維繫團隊和諧氣氛','責任感強，會主動關照團隊與客戶的需要','擅長把規範轉化成大家都能接受的做法'],
+    watch:['過度在意他人觀感，可能延後必要但不討喜的決定','面對衝突時容易優先求和，犧牲自己的立場']},
+  ENFJ:{nickname:'願景號召者', tagline:'擅長把一群人，凝聚成一個方向。',
+    strengths:['擅長激勵與凝聚團隊，具備自然的領導魅力','對他人需求高度敏銳，能因材施教、因人帶領','能將抽象願景轉化為具體可執行的行動方案'],
+    watch:['容易把他人的情緒需求放在自己之前，需留意耗能','過度追求和諧時，可能延遲必要的衝突處理']},
+  ENTJ:{nickname:'目標統籌者', tagline:'先看終點，再決定怎麼走最快。',
+    strengths:['策略思維強，擅長統籌資源達成大型目標','決斷力高，能在壓力下快速做出關鍵決策','天生具備領導氣場，能驅動團隊朝目標前進'],
+    watch:['效率優先的風格可能讓人覺得強勢或缺乏耐性','對過程中的人際感受敏感度較低，需特別留意']},
+};
+
+const QUESTIONS = [
+  {test:'bigfive', dim:'stability',   text:'即使工作中遇到突發狀況，我通常能很快冷靜下來應對。', rev:false},
+  {test:'bigfive', dim:'agreeable',   text:'與同事意見不合時，我傾向先理解對方的立場再表達看法。', rev:false},
+  {test:'bigfive', dim:'conscientious',text:'在開始一項任務前，我習慣先規劃好詳細的步驟。', rev:false},
+  {test:'bigfive', dim:'extraversion',text:'在團體討論中，我習慣主動發言、表達自己的想法。', rev:false},
+  {test:'bigfive', dim:'openness',    text:'我喜歡嘗試新的工作方法，即使這代表要打破原有的習慣。', rev:false},
+
+  {test:'bigfive', dim:'stability',   text:'別人的批評或負面意見，容易讓我心情低落好幾天。', rev:true},
+  {test:'bigfive', dim:'agreeable',   text:'我很重視團隊和諧，會主動協調不同意見。', rev:false},
+  {test:'bigfive', dim:'conscientious',text:'我常常把工作拖到最後一刻才完成。', rev:true},
+  {test:'bigfive', dim:'extraversion',text:'認識新朋友或新同事，會讓我感到精神振奮。', rev:false},
+  {test:'bigfive', dim:'openness',    text:'比起一成不變的流程，我更喜歡充滿變化與挑戰的工作內容。', rev:false},
+
+  {test:'bigfive', dim:'stability',   text:'面對緊湊的截止期限，我仍能維持穩定的工作節奏。', rev:false},
+  {test:'bigfive', dim:'agreeable',   text:'花心力配合別人的需求，對我來說常常覺得是浪費時間。', rev:true},
+  {test:'bigfive', dim:'conscientious',text:'我對自己交付的工作品質要求很高，會反覆檢查確認。', rev:false},
+  {test:'bigfive', dim:'extraversion',text:'比起站在第一線帶領大家，我更習慣在後方默默支援。', rev:true},
+  {test:'bigfive', dim:'openness',    text:'面對不熟悉的領域，我習慣先觀望，盡量不主動涉入。', rev:true},
+
+  {test:'bigfive', dim:'stability',   text:'我常常會因為一些小事而感到焦慮不安。', rev:true},
+  {test:'bigfive', dim:'agreeable',   text:'同事遇到困難時，我會主動伸出援手。', rev:false},
+  {test:'bigfive', dim:'conscientious',text:'即使沒人監督，我也會準時完成自己承諾的事。', rev:false},
+  {test:'bigfive', dim:'extraversion',text:'我喜歡在眾人面前報告或展現自己的成果。', rev:false},
+  {test:'bigfive', dim:'openness',    text:'我對藝術、文化或不同的觀點抱持好奇與開放的態度。', rev:false},
+
+  {test:'bigfive', dim:'stability',   text:'即使原本的計畫被打亂，我也能很快調整心態繼續往前。', rev:false},
+  {test:'bigfive', dim:'agreeable',   text:'在團體中，我傾向以自己的想法為優先，較少顧及別人的感受。', rev:true},
+  {test:'bigfive', dim:'conscientious',text:'我的工作桌面或檔案常常顯得有些雜亂無序。', rev:true},
+  {test:'bigfive', dim:'extraversion',text:'與其主動爭取機會，我比較傾向等別人邀請我參與。', rev:true},
+  {test:'bigfive', dim:'openness',    text:'比起創新嘗試，我更偏好沿用已經驗證有效的舊方法。', rev:true},
+
+  {test:'bigfive', dim:'stability',   text:'整體而言，我對自己控制情緒的能力感到有信心。', rev:false},
+  {test:'bigfive', dim:'agreeable',   text:'我容易信任新認識的同事或合作夥伴。', rev:false},
+  {test:'bigfive', dim:'conscientious',text:'遇到困難的任務，我會堅持到底，不輕易放棄。', rev:false},
+  {test:'bigfive', dim:'extraversion',text:'我常常是朋友或同事中率先提議活動、帶動氣氛的人。', rev:false},
+  {test:'bigfive', dim:'openness',    text:'我喜歡從不同角度思考問題，試著找出別人沒想過的解法。', rev:false},
+
+  {test:'mbti', pair:'EI', pole:'E', text:'在團體討論中，我習慣先說出想法，再透過討論把它釐清。'},
+  {test:'mbti', pair:'SN', pole:'S', text:'做決定時，我習慣優先參考具體的數據與過去的實際案例。'},
+  {test:'mbti', pair:'TF', pole:'T', text:'做決定時，我優先考慮邏輯是否合理，而不是會不會傷到誰的感受。'},
+  {test:'mbti', pair:'JP', pole:'J', text:'我喜歡提早把計畫排定好，並按表操課完成。'},
+  {test:'mbti', pair:'EI', pole:'I', text:'我需要先獨立把想法想清楚，才會願意拿出來跟別人討論。'},
+  {test:'mbti', pair:'SN', pole:'N', text:'我常常在討論中看到表面之下隱藏的模式或可能性。'},
+  {test:'mbti', pair:'TF', pole:'F', text:'做決定前，我會優先考慮這個決定對相關的人有什麼影響。'},
+  {test:'mbti', pair:'JP', pole:'P', text:'我喜歡保留彈性，依現場狀況隨時調整原本的計畫。'},
+
+  {test:'mbti', pair:'EI', pole:'E', text:'跟很多人一起共事一整天後，我反而覺得更有活力。'},
+  {test:'mbti', pair:'SN', pole:'S', text:'我比較重視眼前能落實的細節，而不是遙遠的可能性。'},
+  {test:'mbti', pair:'TF', pole:'T', text:'給回饋時，我傾向直接點出問題所在，而不會特別包裝語氣。'},
+  {test:'mbti', pair:'JP', pole:'J', text:'待辦事項一旦排進行程，我會盡量提前完成，而不是拖到最後。'},
+  {test:'mbti', pair:'EI', pole:'I', text:'長時間與很多人互動後，我會需要獨處的時間來恢復精神。'},
+  {test:'mbti', pair:'SN', pole:'N', text:'比起按照既有流程，我更喜歡探索「還有沒有別的可能」。'},
+  {test:'mbti', pair:'TF', pole:'F', text:'給回饋時，我會特別注意對方的感受，盡量用委婉的方式表達。'},
+  {test:'mbti', pair:'JP', pole:'P', text:'截止日期前的最後衝刺，往往是我效率最高的時刻。'},
+
+  {test:'mbti', pair:'EI', pole:'E', text:'我喜歡在會議或聚會中認識新的人，主動開啟話題。'},
+  {test:'mbti', pair:'SN', pole:'S', text:'學習新事物時，我喜歡先掌握具體步驟，再談背後的理論。'},
+  {test:'mbti', pair:'TF', pole:'T', text:'我認為公平的規則比照顧每個人的感受更重要。'},
+  {test:'mbti', pair:'JP', pole:'J', text:'面對任務，我傾向先做完再放鬆，不喜歡事情懸在那邊。'},
+  {test:'mbti', pair:'EI', pole:'I', text:'比起大型聚會，我更享受跟少數熟悉的人深入交談。'},
+  {test:'mbti', pair:'SN', pole:'N', text:'我容易把不同領域的概念連結在一起，產生新的想法。'},
+  {test:'mbti', pair:'TF', pole:'F', text:'團隊裡的氣氛與人際和諧，對我來說跟結果一樣重要。'},
+  {test:'mbti', pair:'JP', pole:'P', text:'比起照表操課，我更習慣依當下的興趣與靈感決定先做什麼。'},
+];
+
+// ── EmailJS 設定（申請帳號後填入這三個值）──────────────────────────────
+const EMAILJS_PUBLIC_KEY  = '-WKOvW3LvPnF7087R';  // Public Key
+const EMAILJS_SERVICE_ID  = 'service_3yjz5dt';     // Service ID
+const EMAILJS_TEMPLATE_ID = 'template_jfnci2q';    // Template ID
+// ─────────────────────────────────────────────────────────────────────────
+
+// 管理者密碼：請依需求修改下方字串，再將含有 ?admin=1 的網址提供給招募窗口使用
+const ADMIN_PASSWORD = 'Admin123';
+// 若填入 Email，候選人完成填答後會顯示「以 Email 寄出」按鈕；留空則不顯示
+const HR_CONTACT_EMAIL = '';
+// 問卷作答時間上限（毫秒），預設 10 分鐘
+const QUIZ_LIMIT_MS = 10 * 60 * 1000;
+const isAdminMode = new URLSearchParams(window.location.search).get('admin')==='1';
+
+function escapeHtml(str){
+  return String(str==null?'':str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+function encodeResult(){
+  const payload = JSON.stringify({ n:state.name, t:Date.now(), e:state.elapsedMs, a:state.answers });
+  return btoa(unescape(encodeURIComponent(payload)));
+}
+
+function decodeResult(code){
+  try{
+    const json = decodeURIComponent(escape(atob(code.trim())));
+    const obj = JSON.parse(json);
+    if(!obj || !Array.isArray(obj.a) || obj.a.length!==QUESTIONS.length) return null;
+    return obj;
+  }catch(e){ return null; }
+}
+
+function qualityFlags(answers, elapsedMs){
+  const flags=[];
+  const counts={};
+  answers.forEach(a=>{ if(a!=null) counts[a]=(counts[a]||0)+1; });
+  const answered = answers.filter(a=>a!=null).length;
+  const maxCount = Math.max(0, ...Object.values(counts));
+  if(answered>0 && maxCount/answered >= 0.85){
+    flags.push('作答分佈高度集中在單一選項（'+maxCount+'/'+answered+' 題相同），建議留意是否充分閱讀每道題目，可於面談中口頭核對部分題項。');
+  }
+  if(elapsedMs!=null){
+    const mins = elapsedMs/60000;
+    if(mins>0 && mins<2.5){
+      flags.push('作答時間僅約 '+mins.toFixed(1)+' 分鐘（共 54 題），明顯低於一般填答所需時間，建議面談時當場核對部分回答內容。');
+    }
+  }
+  return flags;
+}
+
+function formatElapsed(ms){
+  if(ms==null) return '未知';
+  const totalSec=Math.max(0, Math.round(ms/1000));
+  const m=Math.floor(totalSec/60), s=totalSec%60;
+  return m+' 分 '+String(s).padStart(2,'0')+' 秒';
+}
+
+function formatDateTime(ts){
+  if(ts==null) return '未知';
+  const d=new Date(ts);
+  return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+
+let state = {
+  screen: isAdminMode ? 'adminLogin' : 'intro',
+  qIndex:0,
+  name:'',
+  startTime:null,
+  elapsedMs:null,
+  submittedAt:null,
+  answers:new Array(QUESTIONS.length).fill(null),
+  loginError:'',
+  decodeError:'',
+  timerId:null,
+  emailStatus:'',  // 'sending' | 'success' | 'error'
+  emailError:''
+};
+
+function clearQuizTimer(){
+  if(state.timerId){ clearInterval(state.timerId); state.timerId=null; }
+}
+
+function submitQuiz(){
+  clearQuizTimer();
+  state.elapsedMs = state.startTime ? Date.now()-state.startTime : null;
+  state.submittedAt = Date.now();
+  state.screen='thankyou';
+  state.emailStatus='sending'; // 'sending' | 'success' | 'error'
+  state.emailError='';
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+  // 自動寄信
+  sendReportEmail(
+    ()=>{ state.emailStatus='success'; render(); },
+    (err)=>{ state.emailStatus='error'; state.emailError=(err&&err.text)||String(err)||'未知錯誤'; render(); }
+  );
+}
+
+function pentagonPoints(cx,cy,r){
+  const pts=[];
+  for(let i=0;i<5;i++){
+    const a=-Math.PI/2 + i*(2*Math.PI/5);
+    pts.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]);
+  }
+  return pts;
+}
+function ptsStr(pts){ return pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '); }
+
+function computeBigFive(){
+  const sums={}, counts={};
+  DIMENSIONS.forEach(d=>{sums[d.key]=0;counts[d.key]=0;});
+  QUESTIONS.forEach((q,i)=>{
+    if(q.test!=='bigfive') return;
+    const raw=state.answers[i];
+    if(raw==null) return;
+    const val=q.rev ? (6-raw) : raw;
+    sums[q.dim]+=val; counts[q.dim]++;
+  });
+  const scores={};
+  DIMENSIONS.forEach(d=>{
+    const avg = sums[d.key]/(counts[d.key]||1);
+    scores[d.key]=Math.round(((avg-1)/4)*100);
+  });
+  return scores;
+}
+
+function computeMBTI(){
+  const raw={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+  QUESTIONS.forEach((q,i)=>{
+    if(q.test!=='mbti') return;
+    const v=state.answers[i];
+    if(v==null) return;
+    raw[q.pole]+=v;
+  });
+  const pairs=MBTI_PAIRS.map(p=>{
+    const l=raw[p.left], r=raw[p.right], total=(l+r)||1;
+    const leftPct=Math.round(l/total*100);
+    const dominant = l>=r ? p.left : p.right;
+    const merged=Object.assign({}, p);
+    merged.leftPct=leftPct; merged.rightPct=100-leftPct; merged.dominant=dominant;
+    return merged;
+  });
+  const type = pairs.map(p=>p.dominant).join('');
+  return {type, pairs};
+}
+
+function bandOf(s){ return s>=70?'high': s>=40?'mid':'low'; }
+function bandLabel(b){ return b==='high'?'高':b==='mid'?'中':'低'; }
+
+function buildRadarSVG(scores){
+  const cx=170, cy=155, maxR=104;
+  const grids=[0.25,0.5,0.75,1].map(f=>'<polygon class="grid" points="'+ptsStr(pentagonPoints(cx,cy,maxR*f))+'"/>').join('');
+  const axisPts=pentagonPoints(cx,cy,maxR);
+  const axes=axisPts.map(p=>'<line class="axis" x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'"/>').join('');
+  const scorePts=DIMENSIONS.map((d,i)=>{
+    const a=-Math.PI/2+i*(2*Math.PI/5);
+    const r=maxR*(scores[d.key]/100);
+    return [cx+r*Math.cos(a), cy+r*Math.sin(a)];
+  });
+  const poly='<polygon class="score" points="'+ptsStr(scorePts)+'"/>';
+  const dots=DIMENSIONS.map((d,i)=>'<circle cx="'+scorePts[i][0].toFixed(1)+'" cy="'+scorePts[i][1].toFixed(1)+'" r="4" fill="'+d.hex+'"/>').join('');
+  const labelPts=pentagonPoints(cx,cy,maxR*1.26);
+  const labels=DIMENSIONS.map((d,i)=>'<text class="axis-label" x="'+labelPts[i][0].toFixed(1)+'" y="'+labelPts[i][1].toFixed(1)+'" text-anchor="middle" dominant-baseline="middle">'+d.short+'</text>').join('');
+  return '<svg viewBox="0 0 340 320" class="radar">'+grids+axes+poly+dots+labels+'</svg>';
+}
+
+function buildPairRow(p){
+  const desc = p.dominant===p.left ? p.leftDesc : p.rightDesc;
+  return `
+  <div class="pair-card">
+    <div class="pair-labels">
+      <span class="${p.dominant===p.left?'dominant':''}">${p.leftLabel} ${p.leftPct}%</span>
+      <span class="${p.dominant===p.right?'dominant':''}">${p.rightPct}% ${p.rightLabel}</span>
+    </div>
+    <div class="pair-track"><div class="pair-fill" style="width:${p.leftPct}%"></div></div>
+    <p class="pair-desc">${desc}</p>
+  </div>`;
+}
+
+function renderIntro(){
+  return `
+  <div class="sheet">
+    <div class="eyebrow">RECRUITMENT REFERENCE · BIG FIVE × MBTI</div>
+    <h1>職場人格特質問卷</h1>
+    <p class="lede">這份問卷是本次應徵流程的參考資料之一，整合心理學「五大人格特質」（Big&nbsp;Five）與「MBTI 十六型人格」兩套常見職場性格框架，協助我們更了解您的工作風格，作為後續面談的參考方向之一，並非唯一或絕對的錄用標準。</p>
+    <div class="meta-row">
+      <span><b>54</b> 題</span>
+      <span>約 <b>13–15</b> 分鐘</span>
+      <span>Big Five <b>+</b> MBTI</span>
+    </div>
+    <label class="field-label" for="nameInput">您的姓名</label>
+    <input class="field-input" id="nameInput" type="text" placeholder="請輸入姓名" value="${escapeHtml(state.name)}" />
+    <button class="btn btn-primary" id="startBtn" ${state.name.trim()===''?'disabled':''}>開始填答</button>
+    <p class="disclaimer">本問卷以 Big Five 與 MBTI 兩套廣泛使用的人格框架設計而成，作為了解您工作風格的參考工具；MBTI 在學術信效度上不如 Big Five 嚴謹，兩者皆非正式心理衡鑑、人格診斷，亦非誠信測驗或測謊工具，也非104人力銀行或官方MBTI機構之產品。填答完成後結果不會在本頁顯示，系統會產生一段代碼由您提供給招募窗口，作為面談前的參考之一，不是錄用與否的唯一依據。請依您平時實際的想法與習慣作答，沒有標準答案。</p>
+  </div>`;
+}
+
+function renderQuiz(){
+  const i=state.qIndex, total=QUESTIONS.length, q=QUESTIONS[i];
+  const answer=state.answers[i];
+  const pct=((i+1)/total*100).toFixed(1);
+  const isLast=i===total-1;
+  const partLabel = q.test==='bigfive' ? 'PART 1 · 五大人格特質 BIG FIVE' : 'PART 2 · MBTI 性格傾向';
+  const bubbles=LIKERT.map((label,idx)=>{
+    const val=idx+1, selected=answer===val;
+    return `<div class="bubble-col">
+      <button class="bubble" type="button" data-val="${val}" aria-pressed="${selected}" aria-label="${label}">${val}</button>
+      <div class="bubble-label">${label}</div>
+    </div>`;
+  }).join('');
+  const elapsed = state.startTime ? Math.min(Date.now()-state.startTime, QUIZ_LIMIT_MS) : 0;
+  const remaining = Math.max(0, QUIZ_LIMIT_MS - elapsed);
+  const remSec = Math.ceil(remaining/1000);
+  const remMin = Math.floor(remSec/60), remSecPart = remSec%60;
+  const timerStr = String(remMin).padStart(2,'0')+':'+String(remSecPart).padStart(2,'0');
+  const timerPct = (remaining/QUIZ_LIMIT_MS*100).toFixed(1);
+  const urgent = remaining <= 60000;
+  return `
+  <div class="sheet">
+    <div class="part-tag">${partLabel}</div>
+    <div class="progress-row">
+      <span class="progress-label">Q${String(i+1).padStart(2,'0')} / ${total}</span>
+      <span class="progress-label">${pct}%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="timer-row">
+      <span class="timer-label">剩餘時間</span>
+      <span class="timer-display${urgent?' urgent':''}" id="timerDisplay">${timerStr}</span>
+    </div>
+    <div class="timer-track"><div class="timer-fill" id="timerFill" style="width:${timerPct}%"></div></div>
+    <p class="question-text">${q.text}</p>
+    <div class="bubble-row" role="radiogroup" aria-label="作答選項">${bubbles}</div>
+    <div class="nav-row">
+      <button class="btn btn-ghost" id="prevBtn" ${i===0?'disabled':''}>上一題</button>
+      <button class="btn btn-primary" id="nextBtn" ${answer==null?'disabled':''}>${isLast?'完成填答':'下一題'}</button>
+    </div>
+  </div>`;
+}
+
+function renderThankYou(){
+  const greetingName = escapeHtml(state.name.trim() || '您');
+  let statusHtml='';
+  if(state.emailStatus==='sending'){
+    statusHtml=`<p class="copy-note" style="font-size:14px;margin-top:16px;">⏳ 報告傳送中，請稍候…</p>`;
+  } else if(state.emailStatus==='success'){
+    statusHtml=`<p class="copy-note" style="font-size:14px;margin-top:16px;color:#2a7a4b;">✓ 報告已成功寄出，感謝您的填答。</p>`;
+  } else if(state.emailStatus==='error'){
+    statusHtml=`<p class="error-text" style="margin-top:16px;">⚠ 報告寄送失敗（${escapeHtml(state.emailError)}），請通知招募窗口。</p>`;
+  }
+  return `
+  <div class="sheet">
+    <div class="eyebrow">SUBMITTED · 感謝您的填答</div>
+    <h1>問卷已完成</h1>
+    <p class="lede">${greetingName} 您好，感謝您完成本次職場人格特質問卷。您的結果已自動傳送給招募窗口，作為本次應徵流程的參考資料之一，不會在本頁面顯示。</p>
+    ${statusHtml}
+    <p class="disclaimer">若對應徵流程有任何疑問，歡迎與我們聯繫。</p>
+  </div>`;
+}
+
+function renderAdminLogin(){
+  return `
+  <div class="sheet">
+    <div class="eyebrow">ADMIN ONLY · 管理者登入</div>
+    <h1>應試者結果解析</h1>
+    <p class="lede">此頁面僅供招募窗口使用，用於解析應試者完成問卷後產生的結果代碼，呈現完整的人格分析與面談建議。</p>
+    <label class="field-label" for="pwInput">管理密碼</label>
+    <input class="field-input" id="pwInput" type="password" placeholder="請輸入密碼" />
+    ${state.loginError?'<p class="error-text">'+escapeHtml(state.loginError)+'</p>':''}
+    <button class="btn btn-primary" id="loginBtn">登入</button>
+  </div>`;
+}
+
+function renderAdminPaste(){
+  return `
+  <div class="sheet">
+    <div class="eyebrow">ADMIN ONLY · STEP 2</div>
+    <h1>貼上結果代碼</h1>
+    <p class="lede">請將應試者提供的結果代碼完整貼到下方欄位，系統會在本機解析並顯示完整報告，不會上傳至任何伺服器。</p>
+    <label class="field-label" for="codeInput">結果代碼</label>
+    <textarea class="field-input" id="codeInput" placeholder="貼上應試者提供的代碼…"></textarea>
+    ${state.decodeError?'<p class="error-text">'+escapeHtml(state.decodeError)+'</p>':''}
+    <button class="btn btn-primary" id="decodeBtn">解析結果</button>
+  </div>`;
+}
+
+function renderAdminReport(){
+  const scores=computeBigFive();
+  const top=DIMENSIONS.reduce((a,b)=> scores[a.key]>=scores[b.key]?a:b);
+  const bottom=DIMENSIONS.reduce((a,b)=> scores[a.key]<=scores[b.key]?a:b);
+  const mbtiResult=computeMBTI();
+  const mbtiInfo=MBTI_TYPES[mbtiResult.type];
+  const flags=qualityFlags(state.answers, state.elapsedMs);
+
+  const strengthItems=[
+    {mark:'＋',tag:'〔MBTI〕',text:mbtiInfo.strengths[0]},
+    {mark:'＋',tag:'〔MBTI〕',text:mbtiInfo.strengths[1]},
+    {mark:'＋',tag:'〔MBTI〕',text:mbtiInfo.strengths[2]},
+    {mark:'＋',tag:'〔Big Five〕',text:top.strengthPhrase},
+  ];
+  const probeItems=[
+    {mark:'▸',tag:'〔Big Five〕',text:bottom.probe},
+    {mark:'▸',tag:'〔MBTI〕',text:mbtiInfo.watch[0]},
+    {mark:'▸',tag:'〔MBTI〕',text:mbtiInfo.watch[1]},
+  ];
+  const strengthHtml=strengthItems.map(it=>`<li><span class="trait-mark">${it.mark}</span><span class="trait-tag">${it.tag}</span><span>${it.text}</span></li>`).join('');
+  const probeHtml=probeItems.map(it=>`<li><span class="trait-mark">${it.mark}</span><span class="trait-tag">${it.tag}</span><span>${it.text}</span></li>`).join('');
+  const flagsHtml = flags.length
+    ? flags.map(f=>`<li><span class="trait-mark">⚠</span><span class="trait-tag">〔作答品質〕</span><span>${f}</span></li>`).join('')
+    : `<li><span class="trait-mark">✓</span><span class="trait-tag">〔作答品質〕</span><span>未偵測到明顯的作答異常（如極端單一作答或填答時間過短）。</span></li>`;
+
+  const cards=DIMENSIONS.map(d=>{
+    const s=scores[d.key], b=bandOf(s);
+    let badge='';
+    if(d.key===top.key) badge='<span class="badge high">★ 突出優勢</span>';
+    else if(d.key===bottom.key) badge='<span class="badge low">💡 面談留意</span>';
+    return `
+    <div class="dim-card">
+      ${badge}
+      <div class="dim-head">
+        <div class="dim-name-wrap">
+          <span class="dim-dot" style="background:${d.color}"></span>
+          <span class="dim-name">${d.name}</span>
+        </div>
+        <span class="dim-score" style="color:${d.color}">${s} · ${bandLabel(b)}</span>
+      </div>
+      <p class="dim-facets">${d.facets}</p>
+      <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${s}%;background:${d.color}"></div></div>
+      <p class="dim-text">${d[b]}</p>
+    </div>`;
+  }).join('');
+
+  const pairRows=mbtiResult.pairs.map(buildPairRow).join('');
+
+  return `
+  <div class="sheet">
+    <div class="eyebrow">ADMIN REPORT · 應試者報告</div>
+    <p class="candidate-name">${escapeHtml(state.name) || '（未填寫姓名）'}</p>
+    <p class="candidate-meta">提交時間　${formatDateTime(state.submittedAt)}　・　作答耗時　${formatElapsed(state.elapsedMs)}</p>
+
+    <div class="mbti-headline">
+      <p class="mbti-code">${mbtiResult.type}</p>
+      <p class="mbti-nickname">${mbtiInfo.nickname}</p>
+      <p class="mbti-tagline">${mbtiInfo.tagline}</p>
+    </div>
+
+    <div class="conclusion-box">
+      <p>整合兩套模型來看，此應試者的人格傾向最接近「<b>${mbtiInfo.nickname}</b>」（<b>${mbtiResult.type}</b> 型）：${mbtiInfo.tagline}</p>
+      <p>同時，在五大人格特質中又以「<b>${top.name}</b>」最為突出——${top.archetypeDesc}兩套工具從不同角度出發，但都指向類似的職場樣貌，可互相佐證。</p>
+    </div>
+
+    <div class="section-label">候選人優勢</div>
+    <ul class="trait-list strengths">${strengthHtml}</ul>
+
+    <div class="section-label">面談建議追問方向</div>
+    <ul class="trait-list watch">${probeHtml}</ul>
+
+    <div class="section-label">作答品質提醒</div>
+    <ul class="trait-list flags">${flagsHtml}</ul>
+    <p class="disclaimer" style="margin-top:0;">以上為作答過程的客觀紀錄，用於提醒面談者留意作答品質，並非對應試者人格或誠信的判斷。</p>
+
+    <div class="section-label">細項分析・五大人格特質 BIG FIVE</div>
+    ${buildRadarSVG(scores)}
+    ${cards}
+
+    <div class="section-label">細項分析・MBTI 四個向度</div>
+    ${pairRows}
+
+    <p class="disclaimer">本報告以 Big Five 與 MBTI 兩套模型模擬產生，其中 MBTI 在學術信效度上不如 Big Five 嚴謹，僅供溝通參考；報告僅反映應試者填答當下的自我評估傾向，並非正式心理衡鑑、人格診斷，亦非誠信測驗或測謊工具，不應作為錄用與否的單一或絕對依據，建議搭配面談、工作樣本與其他評估方式綜合判斷。</p>
+
+    <div class="result-actions">
+      <button class="btn btn-ghost btn-small" id="copyBtn">複製報告文字</button>
+      <button class="btn btn-primary btn-small" id="sendEmailBtn">寄送報告至信箱</button>
+      <button class="btn btn-ghost btn-small" id="nextCandidateBtn">解析下一份代碼</button>
+    </div>
+    <div class="copy-note" id="copyNote"></div>
+  </div>`;
+}
+
+function buildAdminSummaryText(){
+  const scores=computeBigFive();
+  const top=DIMENSIONS.reduce((a,b)=> scores[a.key]>=scores[b.key]?a:b);
+  const bottom=DIMENSIONS.reduce((a,b)=> scores[a.key]<=scores[b.key]?a:b);
+  const mbtiResult=computeMBTI();
+  const mbtiInfo=MBTI_TYPES[mbtiResult.type];
+  const flags=qualityFlags(state.answers, state.elapsedMs);
+  let lines=['【職場人格特質問卷－應試者報告】','', '姓名：'+(state.name||'（未填寫）'), '提交時間：'+formatDateTime(state.submittedAt), '作答耗時：'+formatElapsed(state.elapsedMs), '', 'MBTI 類型：'+mbtiResult.type+'（'+mbtiInfo.nickname+'）', mbtiInfo.tagline, ''];
+  lines.push('五大人格特質：');
+  DIMENSIONS.forEach(d=>{ const s=scores[d.key]; lines.push('　'+d.name+'：'+s+'（'+bandLabel(bandOf(s))+'）'); });
+  lines.push('', '候選人優勢：');
+  mbtiInfo.strengths.forEach(s=>lines.push('　＋ '+s));
+  lines.push('　＋ '+top.strengthPhrase);
+  lines.push('', '面談建議追問方向：');
+  lines.push('　▸ '+bottom.probe);
+  mbtiInfo.watch.forEach(s=>lines.push('　▸ '+s));
+  lines.push('', '作答品質提醒：');
+  if(flags.length){ flags.forEach(f=>lines.push('　⚠ '+f)); }
+  else { lines.push('　✓ 未偵測到明顯的作答異常。'); }
+  lines.push('', '本報告僅供面談前參考，非錄用唯一依據。');
+  return lines.join('\n');
+}
+
+function sendReportEmail(onSuccess, onError){
+  const reportText = buildAdminSummaryText();
+  const params = {
+    candidate_name : state.name || '（未填寫）',
+    submitted_at   : formatDateTime(state.submittedAt),
+    elapsed        : formatElapsed(state.elapsedMs),
+    report_text    : reportText
+  };
+  // 懶載入 EmailJS SDK（僅在第一次寄信時載入，不影響問卷開啟速度）
+  function doSend(){
+    window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+      .then(() => onSuccess())
+      .catch(err => onError(err));
+  }
+  if(window.emailjs){ doSend(); return; }
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  script.onload = doSend;
+  script.onerror = () => onError(new Error('EmailJS SDK 載入失敗，請確認網路連線'));
+  document.head.appendChild(script);
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(state.screen==='intro') app.innerHTML=renderIntro();
+  else if(state.screen==='quiz') app.innerHTML=renderQuiz();
+  else if(state.screen==='thankyou') app.innerHTML=renderThankYou();
+  else if(state.screen==='adminLogin') app.innerHTML=renderAdminLogin();
+  else if(state.screen==='adminPaste') app.innerHTML=renderAdminPaste();
+  else app.innerHTML=renderAdminReport();
+  bind();
+}
+
+function bind(){
+  if(state.screen==='intro'){
+    const nameInput=document.getElementById('nameInput');
+    const startBtn=document.getElementById('startBtn');
+    nameInput.addEventListener('input',()=>{
+      state.name=nameInput.value;
+      startBtn.disabled = state.name.trim()==='';
+    });
+    startBtn.addEventListener('click',()=>{
+      if(state.name.trim()==='') return;
+      state.startTime=Date.now();
+      state.screen='quiz'; state.qIndex=0; render();
+    });
+  } else if(state.screen==='quiz'){
+    document.querySelectorAll('.bubble').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        state.answers[state.qIndex]=parseInt(btn.dataset.val,10);
+        render();
+      });
+    });
+    document.getElementById('prevBtn').addEventListener('click',()=>{
+      if(state.qIndex>0){ state.qIndex--; render(); }
+    });
+    document.getElementById('nextBtn').addEventListener('click',()=>{
+      if(state.answers[state.qIndex]==null) return;
+      if(state.qIndex<QUESTIONS.length-1){ state.qIndex++; render(); }
+      else { submitQuiz(); }
+    });
+    // start / resume live countdown — update DOM in-place without full re-render
+    clearQuizTimer();
+    state.timerId = setInterval(()=>{
+      const elapsed = state.startTime ? Date.now()-state.startTime : 0;
+      const remaining = Math.max(0, QUIZ_LIMIT_MS - elapsed);
+      const remSec = Math.ceil(remaining/1000);
+      const remMin = Math.floor(remSec/60), remSecPart = remSec%60;
+      const timerStr = String(remMin).padStart(2,'0')+':'+String(remSecPart).padStart(2,'0');
+      const timerPct = (remaining/QUIZ_LIMIT_MS*100).toFixed(1);
+      const urgent = remaining <= 60000;
+      const disp = document.getElementById('timerDisplay');
+      const fill = document.getElementById('timerFill');
+      if(disp){ disp.textContent=timerStr; disp.className='timer-display'+(urgent?' urgent':''); }
+      if(fill){ fill.style.width=timerPct+'%'; }
+      if(remaining<=0){ submitQuiz(); }
+    }, 1000);
+  } else if(state.screen==='thankyou'){
+    clearQuizTimer();
+    // 寄信由 submitQuiz() 自動觸發，此處無需額外綁定
+  } else if(state.screen==='adminLogin'){
+    document.getElementById('loginBtn').addEventListener('click',()=>{
+      const val=document.getElementById('pwInput').value;
+      if(val===ADMIN_PASSWORD){ state.loginError=''; state.screen='adminPaste'; }
+      else { state.loginError='密碼不正確，請重新輸入。'; }
+      render();
+    });
+  } else if(state.screen==='adminPaste'){
+    document.getElementById('decodeBtn').addEventListener('click',()=>{
+      const raw=document.getElementById('codeInput').value;
+      const obj=decodeResult(raw);
+      if(!obj){ state.decodeError='代碼格式錯誤或不完整，請確認完整複製貼上。'; render(); return; }
+      state.decodeError='';
+      state.name=obj.n||'';
+      state.elapsedMs=obj.e||null;
+      state.submittedAt=obj.t||null;
+      state.answers=obj.a;
+      state.screen='adminReport';
+      render(); window.scrollTo({top:0,behavior:'smooth'});
+    });
+  } else {
+    document.getElementById('nextCandidateBtn').addEventListener('click',()=>{
+      state.decodeError=''; state.answers=new Array(QUESTIONS.length).fill(null);
+      state.name=''; state.elapsedMs=null; state.submittedAt=null;
+      state.screen='adminPaste'; render(); window.scrollTo({top:0,behavior:'smooth'});
+    });
+    document.getElementById('copyBtn').addEventListener('click',()=>{
+      const text=buildAdminSummaryText();
+      const note=document.getElementById('copyNote');
+      navigator.clipboard.writeText(text).then(()=>{
+        note.textContent='已複製到剪貼簿';
+        setTimeout(()=>note.textContent='',2200);
+      }).catch(()=>{ note.textContent='複製失敗，請手動選取文字'; });
+    });
+    document.getElementById('sendEmailBtn').addEventListener('click',()=>{
+      const btn  = document.getElementById('sendEmailBtn');
+      const note = document.getElementById('copyNote');
+      if(!EMAILJS_PUBLIC_KEY || !EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID){
+        note.textContent='⚠ 尚未填入 EmailJS 設定，請先更新 HTML 檔案中的三個常數。';
+        return;
+      }
+      btn.disabled=true; btn.textContent='寄送中…';
+      note.textContent='';
+      sendReportEmail(
+        ()=>{
+          btn.textContent='✓ 已寄出';
+          note.textContent='報告已成功寄送至您的信箱';
+          setTimeout(()=>{ btn.disabled=false; btn.textContent='寄送報告至信箱'; note.textContent=''; },4000);
+        },
+        (err)=>{
+          btn.disabled=false; btn.textContent='寄送報告至信箱';
+          note.textContent='⚠ 寄送失敗：'+(err&&err.text||err||'未知錯誤')+'，請檢查 EmailJS 設定是否正確。';
+        }
+      );
+    });
+  }
+}
+
+render();
+</script>
+</body>
+</html>
