@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>職場人格特質問卷｜五大人格 × MBTI 雙重分析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDEFF2;
+    --sheet:#FFFFFF;
+    --ink:#1F2430;
+    --ink-soft:#5A6072;
+    --line:#CBCFD8;
+    --seal:#C8442D;
+    --seal-dark:#a8341f;
+    --seal-soft:rgba(200,68,45,0.08);
+    --dim-stability:#3A6EA5;
+    --dim-agreeable:#3F8F66;
+    --dim-conscientious:#C68A2E;
+    --dim-extraversion:#B5466B;
+    --dim-openness:#7A5BA6;
+    --font-display:'Noto Serif TC', serif;
+    --font-body:'Noto Sans TC', -apple-system, sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--paper) 0%, var(--paper) 100%),
+      repeating-linear-gradient(0deg, rgba(31,36,48,0.025) 0px, rgba(31,36,48,0.025) 1px, transparent 1px, transparent 28px);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.65;
+    min-height:100vh;
+    padding:32px 16px 64px;
+  }
+  .wrap{max-width:600px;margin:0 auto;}
+  .sheet{
+    background:var(--sheet);
+    border:1px solid var(--line);
+    border-top:4px solid var(--ink);
+    box-shadow:0 1px 2px rgba(31,36,48,0.04), 0 12px 28px -16px rgba(31,36,48,0.18);
+    padding:36px 28px;
+  }
+  @media (min-width:480px){ .sheet{padding:44px 40px;} }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:flex;align-items:center;gap:8px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:18px;height:1px;background:var(--seal);display:inline-block;}
+
+  h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:28px;
+    line-height:1.3;
+    margin:0 0 14px;
+    letter-spacing:.01em;
+  }
+  .lede{font-size:15px;color:var(--ink-soft);margin:0 0 20px;}
+
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:10px 18px;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+    margin-bottom:26px;
+  }
+  .meta-row span b{color:var(--seal);}
+
+  .btn{
+    appearance:none;border:none;cursor:pointer;
+    font-family:var(--font-body);font-weight:700;font-size:15px;
+    padding:14px 26px;
+    transition:transform .12s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    letter-spacing:.01em;
+  }
+  .btn:focus-visible{outline:2px solid var(--seal);outline-offset:2px;}
+  .btn-primary{background:var(--seal);color:#fff;width:100%;}
+  .btn-primary:hover{background:var(--seal-dark);}
+  .btn-primary:disabled{background:#D8DBE1;color:#9499A6;cursor:not-allowed;}
+  .btn-primary:active:not(:disabled){transform:scale(.99);}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink);}
+  .btn-ghost:hover{background:var(--ink);color:#fff;}
+  .btn-ghost:disabled{opacity:.35;cursor:not-allowed;}
+  .btn-small{padding:9px 16px;font-size:13px;}
+
+  .disclaimer{
+    font-size:12px;color:var(--ink-soft);margin-top:22px;
+    border-left:2px solid var(--line);padding-left:12px;
+  }
+
+  /* ---- quiz ---- */
+  .part-tag{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--seal);margin-bottom:12px;}
+  .progress-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+  .progress-label{font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);letter-spacing:.04em;}
+  .progress-track{height:5px;background:var(--line);margin-bottom:34px;position:relative;}
+  .progress-fill{height:100%;background:var(--seal);transition:width .35s ease;}
+
+  .timer-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .timer-label{font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);letter-spacing:.04em;}
+  .timer-display{
+    font-family:var(--font-mono);font-size:12.5px;font-weight:700;letter-spacing:.06em;
+    color:var(--ink-soft);transition:color .3s;
+  }
+  .timer-display.urgent{color:var(--seal);animation:timerPulse 1s ease-in-out infinite;}
+  @keyframes timerPulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+  .timer-track{height:4px;background:var(--line);margin-bottom:28px;position:relative;}
+  .timer-fill{height:100%;background:var(--ink-soft);transition:width 1s linear;}
+
+  .question-text{
+    font-family:var(--font-display);font-weight:600;font-size:21px;
+    line-height:1.55;margin:0 0 32px;min-height:108px;
+  }
+
+  .bubble-row{display:flex;justify-content:space-between;gap:6px;margin-bottom:30px;}
+  .bubble-col{display:flex;flex-direction:column;align-items:center;gap:9px;flex:1;}
+  .bubble{
+    width:38px;height:38px;border-radius:50%;
+    border:2px solid var(--ink);background:transparent;
+    font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:background .15s,color .15s,border-color .15s,transform .1s;
+  }
+  .bubble:hover{border-color:var(--seal);}
+  .bubble:focus-visible{outline:2px solid var(--seal);outline-offset:2px;}
+  .bubble[aria-pressed="true"]{background:var(--seal);border-color:var(--seal);color:#fff;transform:scale(1.05);}
+  .bubble-label{font-size:10.5px;color:var(--ink-soft);text-align:center;line-height:1.3;max-width:64px;}
+
+  .nav-row{display:flex;gap:12px;}
+  .nav-row .btn-ghost{flex:0 0 110px;}
+  .nav-row .btn-primary{flex:1;}
+
+  /* ---- results ---- */
+  .stamp-wrap{display:flex;justify-content:center;margin-bottom:6px;}
+  .stamp{
+    width:128px;height:128px;border-radius:50%;
+    border:3px double var(--seal);color:var(--seal);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:var(--font-mono);text-align:center;
+    transform:rotate(-8deg);opacity:.88;mix-blend-mode:multiply;
+    animation:stampDown .55s cubic-bezier(.34,1.56,.64,1);
+  }
+  .stamp b{font-size:15px;letter-spacing:.06em;font-weight:700;}
+  .stamp span{font-size:9.5px;letter-spacing:.08em;margin-top:3px;}
+  @keyframes stampDown{
+    from{transform:rotate(-8deg) scale(2.4);opacity:0;}
+    to{transform:rotate(-8deg) scale(1);opacity:.88;}
+  }
+  @media (prefers-reduced-motion: reduce){ .stamp{animation:none;} }
+
+  .mbti-headline{text-align:center;margin:20px 0 0;}
+  .mbti-code{font-family:var(--font-mono);font-weight:700;font-size:46px;letter-spacing:.08em;color:var(--ink);margin:0;}
+  .mbti-nickname{font-family:var(--font-display);font-weight:700;font-size:20px;margin:8px 0 4px;color:var(--seal);}
+  .mbti-tagline{font-size:13.5px;color:var(--ink-soft);margin:0;}
+
+  .conclusion-box{
+    background:var(--seal-soft);
+    border-left:3px solid var(--seal);
+    padding:18px 18px;
+    margin:26px 0 6px;
+    font-size:14px;
+  }
+  .conclusion-box p{margin:0 0 10px;}
+  .conclusion-box p:last-child{margin-bottom:0;}
+
+  .section-label{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);margin:34px 0 14px;display:flex;align-items:center;gap:8px;
+  }
+  .section-label::before{content:"";width:14px;height:1px;background:var(--line);}
+
+  .trait-list{list-style:none;margin:0 0 4px;padding:0;}
+  .trait-list li{display:flex;gap:10px;font-size:13.5px;padding:9px 0;border-top:1px solid var(--line);align-items:baseline;}
+  .trait-list li:first-child{border-top:none;}
+  .trait-mark{font-weight:700;flex:0 0 14px;}
+  .trait-list.strengths .trait-mark{color:var(--seal);}
+  .trait-list.watch .trait-mark{color:var(--ink-soft);}
+  .trait-tag{font-family:var(--font-mono);font-size:10px;color:var(--ink-soft);flex:0 0 64px;}
+
+  .radar{width:100%;max-width:340px;display:block;margin:0 auto 8px;}
+  .radar .grid{fill:none;stroke:var(--line);stroke-width:1;}
+  .radar .axis{stroke:var(--line);stroke-width:1;}
+  .radar .score{fill:rgba(200,68,45,0.14);stroke:var(--seal);stroke-width:2;}
+  .radar .axis-label{font-family:var(--font-mono);font-size:13px;fill:var(--ink-soft);}
+
+  .dim-card{border-top:1px solid var(--line);padding:20px 0;}
+  .dim-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
+  .dim-name-wrap{display:flex;align-items:center;gap:9px;}
+  .dim-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;}
+  .dim-name{font-family:var(--font-display);font-weight:700;font-size:16.5px;}
+  .dim-score{font-family:var(--font-mono);font-weight:600;font-size:15px;}
+  .dim-facets{font-size:11.5px;color:var(--ink-soft);margin:0 0 10px;letter-spacing:.01em;}
+  .dim-bar-track{height:8px;background:var(--paper);border:1px solid var(--line);margin-bottom:12px;}
+  .dim-bar-fill{height:100%;transition:width .5s ease;}
+  .dim-text{font-size:13.5px;color:var(--ink);margin:0;}
+  .badge{
+    display:inline-block;font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;
+    padding:3px 8px;border:1px solid currentColor;margin-bottom:8px;
+  }
+  .badge.high{color:var(--seal);}
+  .badge.low{color:var(--ink-soft);}
+
+  .pair-card{border-top:1px solid var(--line);padding:18px 0;}
+  .pair-labels{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;margin-bottom:8px;color:var(--ink-soft);}
+  .pair-labels .dominant{color:var(--seal);font-weight:700;}
+  .pair-track{height:8px;background:var(--line);position:relative;margin-bottom:10px;}
+  .pair-fill{height:100%;background:var(--ink);}
+  .pair-desc{font-size:13px;color:var(--ink);margin:0;}
+
+  .result-actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;}
+  .result-actions .btn{flex:1 1 140px;}
+  .copy-note{font-family:var(--font-mono);font-size:11.5px;color:var(--seal);margin-top:8px;text-align:center;min-height:14px;}
+
+  /* ---- name / admin fields ---- */
+  .field-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--ink-soft);margin-bottom:6px;display:block;text-transform:uppercase;}
+  .field-input{
+    width:100%;font-family:var(--font-body);font-size:15px;color:var(--ink);
+    border:1.5px solid var(--line);background:var(--paper);
+    padding:12px 14px;margin-bottom:18px;
+  }
+  .field-input:focus{outline:none;border-color:var(--seal);background:#fff;}
+  textarea.field-input{resize:vertical;min-height:90px;font-family:var(--font-mono);font-size:12.5px;line-height:1.5;}
+  .error-text{color:var(--seal);font-size:12.5px;margin:-8px 0 16px;}
+  .code-box{
+    font-family:var(--font-mono);font-size:11.5px;line-height:1.6;color:var(--ink);
+    background:var(--paper);border:1.5px solid var(--line);padding:16px;
+    word-break:break-all;margin-bottom:16px;max-height:160px;overflow-y:auto;
+  }
+  .candidate-name{font-family:var(--font-display);font-weight:700;font-size:20px;margin:0 0 4px;}
+  .candidate-meta{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-soft);margin:0 0 8px;}
+  .mailto-btn{display:block;text-align:center;text-decoration:none;margin-top:12px;}
+  .trait-list.flags .trait-mark{color:var(--seal);}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const DIMENSIONS = [
+  { key:'stability', name:'情緒穩定性', short:'情穩', facets:'抗壓性・情緒調適・樂觀性・適應性', color:'var(--dim-stability)', hex:'#3A6EA5',
+    archetype:'沉穩抗壓型', archetypeDesc:'越混亂的場面越需要你坐鎮，是團隊裡最穩的那個人。',
+    strengthPhrase:'壓力下仍能維持穩定輸出，是團隊的定錨者',
+    weaknessPhrase:'在持續高壓或衝突頻繁的環境中，情緒管理與恢復速度可能需要額外留意',
+    probe:'面談可請對方描述一次工作中壓力最大的情境，觀察其情緒調節方式與恢復速度，評估職務壓力強度是否匹配。',
+    high:'你在壓力下通常能保持冷靜，情緒起伏不大，遇到突發狀況也能快速調整步調繼續推進。這在高壓或衝突頻繁的職務中是非常可貴的特質。',
+    mid:'你在多數情境下能維持穩定，但遇到特別緊湊或壓力集中的時期，仍會感受到一定程度的情緒波動，屬於一般範圍。',
+    low:'你對壓力與批評較為敏感，情緒較容易受外界影響。在高壓節奏快的工作環境中，情緒管理與自我調適需要特別關注。' },
+  { key:'agreeable', name:'親和性', short:'親和', facets:'信任感・利他性・合作性・同情心', color:'var(--dim-agreeable)', hex:'#3F8F66',
+    archetype:'溫暖協作型', archetypeDesc:'擅長搭橋，總能讓不同立場的人坐下來好好溝通。',
+    strengthPhrase:'擅長建立信任、促進合作，是團隊關係的潤滑劑',
+    weaknessPhrase:'可能因過於重視和諧而難以堅守立場，在需要強硬決策時容易退讓',
+    probe:'面談可詢問對方曾因立場不同而必須拒絕他人請求的經驗，觀察其設定界限的能力與衝突應對方式。',
+    high:'你重視人際和諧，傾向配合他人、避免衝突，是團隊中善於協調的潤滑角色。但在需要堅守立場或做出不討喜決定的情境中，過高的親和性可能讓你難以果斷行動。',
+    mid:'你在合作與堅持己見之間能取得平衡，視情境調整應對方式，是較為靈活的合作者。',
+    low:'你重視個人判斷與效率，不容易被他人意見左右，在需要獨立評估與決策的角色中是優勢。但在需要大量協作的環境中，可能需要額外留意團隊關係的維繫。' },
+  { key:'conscientious', name:'嚴謹性', short:'嚴謹', facets:'秩序性・謹慎性・自律性・責任感', color:'var(--dim-conscientious)', hex:'#C68A2E',
+    archetype:'嚴謹執行型', archetypeDesc:'交出去的事大家都放心，說到做到是你最穩的招牌。',
+    strengthPhrase:'做事有條理、重視品質，交付成果穩定可靠',
+    weaknessPhrase:'在快節奏或高度模糊的環境中，對細節與完美的追求可能造成執行效率下降',
+    probe:'面談可請對方描述一個時程緊迫又要求細節的任務，觀察其規劃能力、細心程度，並詢問曾因細節疏漏需要補救的經驗。',
+    high:'你做事嚴謹、重視細節與承諾，能持續穩定地完成高品質的工作。在高度結構化的環境中你如魚得水，但當任務要求快速產出或容許模糊時，完美主義的傾向可能讓進度受阻。',
+    mid:'你能在品質與效率之間保持合理平衡，大致上能按時交付，同時維持一定的品質標準。',
+    low:'你偏好彈性、隨機應變，不喜歡被繁瑣的流程與規則束縛。在需要嚴格紀律、細節確認與按時交付的職務中，這可能是需要刻意補強的方向。' },
+  { key:'extraversion', name:'外向性', short:'外向', facets:'社交主動性・活力・表現慾・領導性', color:'var(--dim-extraversion)', hex:'#B5466B',
+    archetype:'積極領導型', archetypeDesc:'天生有股推著大家往前走的能量，很難讓人忽視。',
+    strengthPhrase:'主動積極、善於表達，能帶動團隊氣氛與能量',
+    weaknessPhrase:'在需要長時間獨立深度作業或安靜專注的環境中，持久力可能受影響',
+    probe:'面談可觀察對方在口語表達、主動性與現場氣氛帶動上的表現，並詢問其在獨立作業時如何維持專注與持續力。',
+    high:'你充滿活力、樂於主動表達與影響他人，在需要高度對外溝通或帶領團隊的職務中非常適合。但長時間需要獨立鑽研的工作對你而言可能較為費力。',
+    mid:'你能視場合調整外顯程度，既可以主動發言，也能安靜專注，是適應性較高的工作者。',
+    low:'你偏好獨立作業，思考謹慎深入，在需要專注與深度思考的職務中往往有出色表現。在高頻率社交或公開展示的環境中，可能需要額外的心理能量儲備。' },
+  { key:'openness', name:'開放性', short:'開放', facets:'求知慾・創造力・彈性・抽象思維', color:'var(--dim-openness)', hex:'#7A5BA6',
+    archetype:'創新探索型', archetypeDesc:'總在問「還有沒有更好的方法」，是團隊裡的點子引擎。',
+    strengthPhrase:'思維靈活、好奇心旺盛，能為團隊帶來新觀點與創新解法',
+    weaknessPhrase:'在需要高度一致性、重複執行標準流程的工作中，耐性與穩定性可能成為挑戰',
+    probe:'面談可詢問對方面對流程變革或新工具導入時的反應方式，觀察其學習彈性；同時詢問其在需要重複執行例行任務時如何維持專注與品質。',
+    high:'你對新事物充滿好奇，喜歡探索與創新，思考角度多元。在需要創意、適應變化的環境中你能發揮優勢，但面對高度重複、嚴格依循標準的作業環境，可能需要刻意調整心態。',
+    mid:'你在創新與穩定之間保持彈性，能接受新方法，也能遵循既有流程，是均衡的學習者。',
+    low:'你偏好穩定、已驗證有效的做法，重視可預測性與一致性。這在需要嚴謹遵循標準流程的職務中是優勢，但面對快速變動或需要創新突破的環境，可能需要更多支持與引導。' },
+];
+
+const LIKERT = ['非常不同意','不同意','普通','同意','非常同意'];
+
+const MBTI_PAIRS = [
+  { key:'EI', left:'E', right:'I', leftLabel:'外向 E', rightLabel:'內向 I',
+    leftDesc:'從人際互動與外部世界獲取能量，喜歡邊做邊想、主動表達。',
+    rightDesc:'從獨立思考與內在世界獲取能量，喜歡先想清楚再行動、偏好深度而非廣度。' },
+  { key:'SN', left:'S', right:'N', leftLabel:'實感 S', rightLabel:'直覺 N',
+    leftDesc:'重視具體事實與實際經驗，做事務實、注重細節與可執行性。',
+    rightDesc:'重視可能性與抽象連結，擅長看見模式、構想未來與新方案。' },
+  { key:'TF', left:'T', right:'F', leftLabel:'思考 T', rightLabel:'情感 F',
+    leftDesc:'決策時優先依據邏輯與客觀標準，重視效率與公平的規則。',
+    rightDesc:'決策時優先考量人的感受與價值觀，重視和諧與個人意義。' },
+  { key:'JP', left:'J', right:'P', leftLabel:'判斷 J', rightLabel:'感知 P',
+    leftDesc:'喜歡計畫與明確結構，傾向提早做決定、按部就班完成任務。',
+    rightDesc:'喜歡保持彈性與開放選項，傾向邊走邊調整、擅長應變。' },
+];
+
+const MBTI_TYPES = {
+  ISTJ:{nickname:'務實考核者', tagline:'重視規範與證據，是組織裡最值得信賴的執行後盾。',
+    strengths:['做事嚴謹、按部就班，交付品質穩定','重視承諾與紀律，是團隊中可靠的執行者','擅長從制度與流程角度把關風險'],
+    watch:['面對快速變動或模糊指令時容易感到不適','對未經驗證的新方法接受度較低，可留意彈性']},
+  ISFJ:{nickname:'溫和守護者', tagline:'安靜地把每個人和每件小事都照顧好。',
+    strengths:['細心體貼，擅長記住並滿足團隊與客戶的實際需求','責任感強，會默默把事情做到完整','在穩定的關係與環境中發揮高度可靠性'],
+    watch:['不擅長直接表達不同意見，容易過度遷就他人','面對衝突或變動時，需要多一點時間調適']},
+  INFJ:{nickname:'理念架構者', tagline:'用溫暖的方式，悄悄推動一個更理想的願景。',
+    strengths:['能洞察他人未說出口的需求，溝通有同理心','重視意義與長期願景，能為團隊注入方向感','在一對一深度溝通與輔導上特別有感染力'],
+    watch:['容易因過度投入理想而忽略現實限制','面對大量瑣碎行政或衝突場合容易耗能']},
+  INTJ:{nickname:'策略構築者', tagline:'喜歡先在腦中把整個系統推演一遍，再動手。',
+    strengths:['擅長制定長期策略與系統性解法','獨立思考能力強，能快速看穿問題本質','對品質與邏輯一致性有高標準，能把關方向'],
+    watch:['對流程與情感層面的耐性較低，需留意團隊感受','可能因堅持己見而忽略他人提出的替代方案']},
+  ISTP:{nickname:'實務排解者', tagline:'哪裡出問題，動手拆開看一看就懂了。',
+    strengths:['擅長即時排解實務問題，動手能力強','面對壓力時冷靜務實，不易情緒化','能在有限資源下找到可行的解法'],
+    watch:['對長期規劃與例行報告的興趣較低','表達想法時偏簡短，需留意團隊溝通的完整度']},
+  ISFP:{nickname:'細膩實踐者', tagline:'用自己的步調，把手上的事情做得剛剛好。',
+    strengths:['細膩、有美感與品質意識，作品經得起檢視','待人溫和、不強勢，容易與不同的人合作','重視當下的真實感受，工作態度誠懇'],
+    watch:['不擅長公開表達意見或爭取資源，容易被忽略','面對長期高壓或高衝突環境，續航力需要關注']},
+  INFP:{nickname:'價值倡議者', tagline:'在意的事，會用一輩子的認真去對待。',
+    strengths:['高度認同工作意義時，會展現驚人的投入與創意','善於理解他人觀點，溝通中帶有溫度','對價值衝突敏感，能提早察覺團隊潛在問題'],
+    watch:['缺乏意義感的瑣碎任務容易讓動力下降','面對直接的批評或衝突，需要時間消化情緒']},
+  INTP:{nickname:'邏輯探索者', tagline:'喜歡把一個問題拆到最底層，搞懂為什麼。',
+    strengths:['擅長分析複雜問題，提出有創意的理論解法','對知識與邏輯一致性要求高，能把關品質','獨立作業能力強，適合需要深度鑽研的任務'],
+    watch:['對截止日期與行政細節的敏感度較低','想法成熟前不太願意對外溝通，可能讓進度不透明']},
+  ESTP:{nickname:'行動推進者', tagline:'想清楚不如先試試看，邊做邊修正。',
+    strengths:['反應快、行動力強，擅長在第一線解決突發狀況','善於說服與帶動現場氣氛，談判力強','能在壓力與不確定中保持靈活'],
+    watch:['長期規劃與細節文件容易被忽略','容易在追求效率時跳過必要的審核步驟']},
+  ESFP:{nickname:'活力鼓動者', tagline:'走進房間，氣氛就熱起來了。',
+    strengths:['熱情外向，擅長活絡團隊與客戶關係','適應力強，能在多變的環境中保持正向','擅長透過實際互動快速建立信任'],
+    watch:['面對需要長時間獨自鑽研的任務容易分心','計畫性與紀律性需要額外的工具或夥伴協助']},
+  ENFP:{nickname:'靈感推廣者', tagline:'看到一個可能性，就想拉著大家一起去試。',
+    strengths:['創意豐富，擅長激發團隊的想像力與熱情','人際敏銳度高，能快速與不同的人建立連結','面對改變時適應力強，樂於嘗試新方向'],
+    watch:['興趣容易分散，需要外部結構協助收斂與落地','對重複性高的細節工作容易感到不耐']},
+  ENTP:{nickname:'辯證創新者', tagline:'喜歡在討論中不斷挑戰「為什麼一定要這樣做」。',
+    strengths:['思維靈活，擅長提出創新觀點與替代方案','擅長辯論與說服，能挑戰既有假設找出盲點','面對複雜模糊的問題依然能保持興趣與動力'],
+    watch:['容易因追求新點子而難以堅持完成既有計畫','直接的提問風格有時會讓他人感到被挑戰']},
+  ESTJ:{nickname:'制度推動者', tagline:'把目標拆成清單，然後一項一項打勾完成。',
+    strengths:['執行力強，擅長建立制度與標準化流程','目標導向明確，能有效分配資源達成績效','在管理與監督角色上展現高度可靠性'],
+    watch:['對模糊或情感導向的議題耐性較低','推動效率時可能忽略團隊成員的個別感受']},
+  ESFJ:{nickname:'團隊照護者', tagline:'記得每個人的生日，也記得每件事的進度。',
+    strengths:['人際協調能力強，擅長維繫團隊和諧氣氛','責任感強，會主動關照團隊與客戶的需要','擅長把規範轉化成大家都能接受的做法'],
+    watch:['過度在意他人觀感，可能延後必要但不討喜的決定','面對衝突時容易優先求和，犧牲自己的立場']},
+  ENFJ:{nickname:'願景號召者', tagline:'擅長把一群人，凝聚成一個方向。',
+    strengths:['擅長激勵與凝聚團隊，具備自然的領導魅力','對他人需求高度敏銳，能因材施教、因人帶領','能將抽象願景轉化為具體可執行的行動方案'],
+    watch:['容易把他人的情緒需求放在自己之前，需留意耗能','過度追求和諧時，可能延遲必要的衝突處理']},
+  ENTJ:{nickname:'目標統籌者', tagline:'先看終點，再決定怎麼走最快。',
+    strengths:['策略思維強，擅長統籌資源達成大型目標','決斷力高，能在壓力下快速做出關鍵決策','天生具備領導氣場，能驅動團隊朝目標前進'],
+    watch:['效率優先的風格可能讓人覺得強勢或缺乏耐性','對過程中的人際感受敏感度較低，需特別留意']},
+};
+
+const QUESTIONS = [
+  // 100 題混排，相鄰題不同向度類別
+  // Big Five dims: stability / agreeable / conscientious / extraversion / openness
+  // 基氏擴充 dims: depression / cyclothymia / inferiority / aggression / objectivity
+  // test: bigfive / guilford / mbti / lie
+
+  /* 01 */ {test:'bigfive',  dim:'stability',      rev:false, text:'面對工作上的突發問題，我通常能快速穩住情緒繼續處理。'},
+  /* 02 */ {test:'mbti',     pair:'EI', pole:'E',             text:'在一個剛認識的群體裡，我通常比較早開口說話。'},
+  /* 03 */ {test:'bigfive',  dim:'openness',        rev:false, text:'遇到一個從未接觸過的領域，我通常感到好奇而不是抗拒。'},
+  /* 04 */ {test:'lie',                                        text:'我不記得自己曾對任何人感到過嫉妒或羨慕。'},
+  /* 05 */ {test:'guilford', dim:'aggression',      rev:false, flag:'aggression', text:'當別人做了讓我很不高興的事，我有時候真的很想讓對方難堪。'},
+
+  /* 06 */ {test:'bigfive',  dim:'stability',       rev:true,  text:'我常常因為工作上的小挫折，情緒低落好一段時間才能恢復。'},
+  /* 07 */ {test:'mbti',     pair:'SN', pole:'S',              text:'做決策時，我最信賴的是親身驗證過的具體經驗與數據。'},
+  /* 08 */ {test:'bigfive',  dim:'agreeable',       rev:false, text:'就算對方說的話讓我不舒服，我也很少當場表現出明顯的不滿。'},
+  /* 09 */ {test:'guilford', dim:'depression',       rev:false, flag:'depression', text:'有時候我會覺得自己的未來沒什麼希望，做什麼都沒有意思。'},
+  /* 10 */ {test:'mbti',     pair:'JP', pole:'J',              text:'事情有清楚的截止時間和執行流程，讓我工作起來比較安心。'},
+
+  /* 11 */ {test:'bigfive',  dim:'extraversion',    rev:true,  text:'一個人獨自工作一整天，對我來說精神上不太會覺得耗損。'},
+  /* 12 */ {test:'guilford', dim:'cyclothymia',      rev:false, text:'我的心情有時候會在沒有明顯原因的情況下突然變得很好或很差。'},
+  /* 13 */ {test:'bigfive',  dim:'conscientious',   rev:true,  text:'我做事的風格比較隨性，不太習慣先把每個步驟都想清楚再動手。'},
+  /* 14 */ {test:'mbti',     pair:'EI', pole:'I',              text:'會議結束後，我需要一段獨處時間才能整理好自己的想法。'},
+  /* 15 */ {test:'guilford', dim:'inferiority',      rev:false, flag:'sensitive', text:'在工作場合，我常常擔心自己的表現比不上別人。'},
+
+  /* 16 */ {test:'bigfive',  dim:'stability',       rev:false, text:'被人指出工作上的錯誤，我通常能客觀看待並很快調整。'},
+  /* 17 */ {test:'lie',                                         text:'我從來沒有為了讓對話順利而說過一點點不完全真實的話。'},
+  /* 18 */ {test:'mbti',     pair:'SN', pole:'N',              text:'我常常從一個話題聯想到完全不同領域的事，並覺得兩者有某種關聯。'},
+  /* 19 */ {test:'guilford', dim:'objectivity',      rev:true,  flag:'paranoid', text:'我常常感覺別人對我說的話有話中有話或暗藏其他意思。'},
+  /* 20 */ {test:'bigfive',  dim:'openness',        rev:true,  text:'相較於嘗試新做法，我更偏好沿用自己已經熟悉的方式。'},
+
+  /* 21 */ {test:'mbti',     pair:'TF', pole:'F',              text:'當我知道一個決定可能傷害到某人，即使邏輯上說得通，我也很難完全不在意。'},
+  /* 22 */ {test:'bigfive',  dim:'agreeable',       rev:false, text:'同事找我幫忙但我正很忙，我通常還是會答應，不太好意思直接拒絕。'},
+  /* 23 */ {test:'guilford', dim:'depression',       rev:true,  text:'大多數時候我對自己的工作和生活感到滿意，很少覺得空虛或無意義。'},
+  /* 24 */ {test:'mbti',     pair:'JP', pole:'P',              text:'工作進行中如果出現更好的方向，我願意暫停原有計畫去調整。'},
+  /* 25 */ {test:'bigfive',  dim:'extraversion',    rev:false, text:'開會時如果我對某個議題有看法，不用別人點名，我就會說出來。'},
+
+  /* 26 */ {test:'guilford', dim:'aggression',       rev:true,  text:'遇到讓我生氣的事，我通常能忍下來，不會當場發作。'},
+  /* 27 */ {test:'bigfive',  dim:'conscientious',   rev:true,  text:'截止日期快到了，我才比較有動力認真開始做。'},
+  /* 28 */ {test:'lie',                                         text:'我從未因為不想處理某件事而假裝沒看到或沒聽到。'},
+  /* 29 */ {test:'mbti',     pair:'EI', pole:'E',              text:'和很多人一起工作的日子，往往讓我感覺比獨自工作更有衝勁。'},
+  /* 30 */ {test:'guilford', dim:'cyclothymia',      rev:false, text:'我的情緒起伏比大多數人大，常常在興奮和沮喪之間切換。'},
+
+  /* 31 */ {test:'bigfive',  dim:'stability',       rev:true,  text:'在壓力比較大的時期，我容易感到心煩意亂，很難集中注意力。'},
+  /* 32 */ {test:'mbti',     pair:'SN', pole:'S',              text:'學一個新工具，我習慣先把操作步驟搞懂，再去理解背後的邏輯。'},
+  /* 33 */ {test:'guilford', dim:'inferiority',      rev:false, flag:'sensitive', text:'和同事相比，我有時候覺得自己在某些方面明顯比別人差。'},
+  /* 34 */ {test:'bigfive',  dim:'openness',        rev:false, text:'同樣一件事，我習慣從好幾個角度去看，不容易只接受第一個想法。'},
+  /* 35 */ {test:'mbti',     pair:'TF', pole:'T',              text:'我認為用一致的標準對待所有人，比顧及個別差異更重要。'},
+
+  /* 36 */ {test:'guilford', dim:'objectivity',      rev:false, text:'工作出了問題，我通常能客觀分析原因，而不是直接歸咎於他人。'},
+  /* 37 */ {test:'bigfive',  dim:'agreeable',       rev:true,  text:'在決策上，我傾向以自己的判斷為主，不容易被他人的反應左右。'},
+  /* 38 */ {test:'mbti',     pair:'JP', pole:'J',              text:'我傾向把事情提早做完，而不是等到最後關頭才衝刺。'},
+  /* 39 */ {test:'guilford', dim:'aggression',       rev:false, flag:'aggression', text:'有時候我會想，如果有人能給那些讓我受委屈的人一點教訓就好了。'},
+  /* 40 */ {test:'bigfive',  dim:'extraversion',    rev:true,  text:'比起在大型場合發言，我更習慣在小範圍的對話中表達意見。'},
+
+  /* 41 */ {test:'bigfive',  dim:'conscientious',   rev:false, text:'就算沒人督促，我也會按自己承諾的時間把事情做完。'},
+  /* 42 */ {test:'guilford', dim:'depression',       rev:false, flag:'depression', text:'有一段時間我常常覺得特別疲倦，對任何事情都提不起勁。'},
+  /* 43 */ {test:'lie',                                         text:'我從來不會因為懶惰而跳過一個本應確認的步驟。'},
+  /* 44 */ {test:'mbti',     pair:'EI', pole:'I',              text:'比起和很多人交流，我更享受和少數幾個人深聊。'},
+  /* 45 */ {test:'guilford', dim:'cyclothymia',      rev:true,  text:'我的心情整體而言相當穩定，不容易在短時間內有大起大落。'},
+
+  /* 46 */ {test:'bigfive',  dim:'stability',       rev:false, text:'遇到連續幾天的高強度工作，我通常還是能保持穩定的工作狀態。'},
+  /* 47 */ {test:'mbti',     pair:'SN', pole:'N',              text:'比起處理眼前能馬上落實的細節，我更容易被長遠的可能性吸引。'},
+  /* 48 */ {test:'guilford', dim:'inferiority',      rev:true,  text:'在多數情況下，我對自己完成工作的能力感到有信心。'},
+  /* 49 */ {test:'bigfive',  dim:'openness',        rev:true,  text:'對於藝術、文化或哲學這類話題，我沒有什麼特別的興趣。'},
+  /* 50 */ {test:'mbti',     pair:'TF', pole:'F',              text:'做了一個決定之後，我還是會記掛著它對相關人的影響。'},
+
+  /* 51 */ {test:'guilford', dim:'objectivity',      rev:true,  flag:'paranoid', text:'當事情出了差錯，我的第一反應通常是想到是哪個人造成的。'},
+  /* 52 */ {test:'bigfive',  dim:'agreeable',       rev:false, text:'合作時，我比較重視維持良好的工作關係，而不只是追求個人效率。'},
+  /* 53 */ {test:'mbti',     pair:'JP', pole:'P',              text:'截止日期前最後的衝刺，反而是我狀態最好的時候。'},
+  /* 54 */ {test:'guilford', dim:'aggression',       rev:false, flag:'aggression', text:'如果有人公然對我不禮貌，我很難忍住不反擊。'},
+  /* 55 */ {test:'bigfive',  dim:'extraversion',    rev:false, text:'認識新的人或進入新的團體，我通常不需要太久就能打開話匣子。'},
+
+  /* 56 */ {test:'guilford', dim:'depression',       rev:false, flag:'depression', text:'我有時候覺得自己很孤單，即使身旁有人也感到孤立。'},
+  /* 57 */ {test:'bigfive',  dim:'conscientious',   rev:true,  text:'桌面或電腦裡的檔案，我不太會特別整理，習慣用找的。'},
+  /* 58 */ {test:'lie',                                         text:'我在任何情況下都從未對任何人感到不耐煩。'},
+  /* 59 */ {test:'mbti',     pair:'EI', pole:'E',              text:'工作上遇到問題，我偏好找人一起討論，而不是獨自想清楚再說。'},
+  /* 60 */ {test:'guilford', dim:'cyclothymia',      rev:false, text:'我的情緒有時候會突然變得很低落，自己也不知道為什麼。'},
+
+  /* 61 */ {test:'bigfive',  dim:'stability',       rev:true,  flag:'sensitive', text:'被批評或否定之後，我很難立刻把那個感覺放下繼續工作。'},
+  /* 62 */ {test:'mbti',     pair:'SN', pole:'S',              text:'規劃事情時，我習慣從已知資訊和過去案例出發，而不是先假設未來。'},
+  /* 63 */ {test:'guilford', dim:'inferiority',      rev:false, flag:'sensitive', text:'在需要表現自己的場合，我常常擔心別人會對我有負面的評價。'},
+  /* 64 */ {test:'bigfive',  dim:'openness',        rev:false, text:'在熟悉的工作流程裡，我有時候會想「有沒有更好的做法」。'},
+  /* 65 */ {test:'mbti',     pair:'TF', pole:'T',              text:'在會議中，我比較關注討論的邏輯是否合理，而不是現場氣氛是否和諧。'},
+
+  /* 66 */ {test:'guilford', dim:'objectivity',      rev:true,  flag:'paranoid', text:'我有時候會懷疑，某些人在暗中對我的工作或評價做了什麼手腳。'},
+  /* 67 */ {test:'bigfive',  dim:'agreeable',       rev:true,  text:'對方提出不合理的要求，我通常能清楚地說不，不會因此過意不去。'},
+  /* 68 */ {test:'mbti',     pair:'JP', pole:'J',              text:'事情沒完成就先去做別的，對我來說心裡會覺得不踏實。'},
+  /* 69 */ {test:'guilford', dim:'aggression',       rev:true,  text:'即使別人惹怒了我，我通常還是能控制自己不做出衝動的行為。'},
+  /* 70 */ {test:'bigfive',  dim:'extraversion',    rev:true,  text:'在朋友或同事中，我通常不是最先提出「我們來做某件事」的那個人。'},
+
+  /* 71 */ {test:'bigfive',  dim:'conscientious',   rev:false, text:'難度較高的任務，我傾向一直想辦法撐下去，而不是先放著等靈感。'},
+  /* 72 */ {test:'lie',                                         text:'我從來不曾說過任何人的壞話，即使只是在心裡想。'},
+  /* 73 */ {test:'mbti',     pair:'EI', pole:'I',              text:'需要在眾人面前長時間發言的場合，結束後我通常會感覺比較累。'},
+  /* 74 */ {test:'guilford', dim:'depression',       rev:true,  text:'整體而言，我覺得自己的生活是有意義且值得期待的。'},
+  /* 75 */ {test:'bigfive',  dim:'stability',       rev:false, text:'即使工作計畫突然被打亂，我也能很快調整心態繼續往前。'},
+
+  /* 76 */ {test:'mbti',     pair:'SN', pole:'N',              text:'討論時，我有時候會提出別人覺得「你怎麼會想到這個」的連結或比喻。'},
+  /* 77 */ {test:'guilford', dim:'cyclothymia',      rev:false, text:'我的情緒受外在環境影響很大，天氣、消息或別人的態度都可能讓我心情大變。'},
+  /* 78 */ {test:'bigfive',  dim:'openness',        rev:false, text:'遇到流程需要調整，我通常能接受，不太會堅持非照舊方式不可。'},
+  /* 79 */ {test:'mbti',     pair:'TF', pole:'F',              text:'團隊氣氛不好對我的工作狀態有相當明顯的影響。'},
+  /* 80 */ {test:'guilford', dim:'inferiority',      rev:false, flag:'sensitive', text:'遇到需要展現能力的情境，我常常會在心裡打退堂鼓，擔心自己做不到。'},
+
+  /* 81 */ {test:'bigfive',  dim:'agreeable',       rev:false, text:'我通常傾向相信別人的出發點是好的，不太會先存疑。'},
+  /* 82 */ {test:'mbti',     pair:'JP', pole:'P',              text:'工作中我習慣保持彈性，不太喜歡把每個環節都事先排死。'},
+  /* 83 */ {test:'guilford', dim:'objectivity',      rev:false, text:'對於自己的優缺點，我通常能比較客觀地評估，不容易偏頗。'},
+  /* 84 */ {test:'bigfive',  dim:'extraversion',    rev:true,  text:'和一大群人相處一整天，就算大家都很友善，我通常還是會覺得有點累。'},
+  /* 85 */ {test:'guilford', dim:'aggression',       rev:false, flag:'aggression', text:'有時候我覺得，如果對那些讓我受氣的人強硬一點，會讓我感覺好一些。'},
+
+  /* 86 */ {test:'bigfive',  dim:'conscientious',   rev:false, text:'完成一份工作成果前，我通常會自己再確認一遍有沒有遺漏。'},
+  /* 87 */ {test:'lie',                                         text:'我從來不曾在心裡覺得某個規定不合理，卻還是照做只是為了省麻煩。'},
+  /* 88 */ {test:'guilford', dim:'depression',       rev:false, flag:'depression', text:'有時候我會莫名地感到悲傷或哭泣，即使沒有特別的原因。'},
+  /* 89 */ {test:'bigfive',  dim:'stability',       rev:true,  flag:'impulse', text:'當別人在工作上突然惹怒我，我有時候很難克制自己不當場反應。'},
+  /* 90 */ {test:'mbti',     pair:'EI', pole:'E',              text:'比起獨自思考後再提出想法，我更享受在討論中邊說邊想出答案。'},
+
+  /* 91 */ {test:'guilford', dim:'cyclothymia',      rev:true,  text:'就算遇到讓我很沮喪的事，我通常隔天就能恢復正常的狀態。'},
+  /* 92 */ {test:'bigfive',  dim:'openness',        rev:false, text:'我享受接觸不同背景的人，即使和他們的想法很不一樣。'},
+  /* 93 */ {test:'guilford', dim:'inferiority',      rev:true,  text:'和同事在一起時，我通常不會特別感到自卑或不如人。'},
+  /* 94 */ {test:'bigfive',  dim:'agreeable',       rev:true,  flag:'impulse', text:'說完一句話後，我有時才意識到那樣說可能傷害了對方。'},
+  /* 95 */ {test:'guilford', dim:'objectivity',      rev:true,  flag:'paranoid', text:'我有時候會覺得有些人刻意不把重要的資訊告訴我。'},
+
+  /* 96 */ {test:'bigfive',  dim:'conscientious',   rev:false, text:'遇到工作上重複出現的問題，我傾向整理出一套固定的處理方式。'},
+  /* 97 */ {test:'mbti',     pair:'SN', pole:'N',              text:'我喜歡思考「為什麼」，即使是一些習以為常的事，我也會想去追根究底。'},
+  /* 98 */ {test:'guilford', dim:'aggression',       rev:true,  text:'遇到衝突時，我通常傾向先冷靜下來，而不是立刻反擊或對抗。'},
+  /* 99 */ {test:'bigfive',  dim:'extraversion',    rev:false, text:'在朋友聚會或工作場合，我常常是帶動話題或氣氛的那個人。'},
+  /* 100 */ {test:'guilford', dim:'depression',      rev:true,  text:'整體而言，我對未來抱持樂觀的態度，覺得事情會愈來愈好。'},
+];
+
+// ── EmailJS 設定（申請帳號後填入這三個值）──────────────────────────────
+const EMAILJS_PUBLIC_KEY  = '-WKOvW3LvPnF7087R';  // Public Key
+const EMAILJS_SERVICE_ID  = 'service_3yjz5dt';     // Service ID
+const EMAILJS_TEMPLATE_ID = 'template_jfnci2q';    // Template ID
+// ─────────────────────────────────────────────────────────────────────────
+
+// 管理者密碼：請依需求修改下方字串，再將含有 ?admin=1 的網址提供給招募窗口使用
+const ADMIN_PASSWORD = 'Admin123';
+// 若填入 Email，候選人完成填答後會顯示「以 Email 寄出」按鈕；留空則不顯示
+const HR_CONTACT_EMAIL = '';
+// 問卷作答時間上限（毫秒），預設 10 分鐘
+const QUIZ_LIMIT_MS = 10 * 60 * 1000;
+const isAdminMode = new URLSearchParams(window.location.search).get('admin')==='1';
+
+function escapeHtml(str){
+  return String(str==null?'':str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+function encodeResult(){
+  const payload = JSON.stringify({ n:state.name, t:Date.now(), e:state.elapsedMs, a:state.answers });
+  return btoa(unescape(encodeURIComponent(payload)));
+}
+
+function decodeResult(code){
+  try{
+    const json = decodeURIComponent(escape(atob(code.trim())));
+    const obj = JSON.parse(json);
+    if(!obj || !Array.isArray(obj.a) || obj.a.length!==QUESTIONS.length) return null;
+    return obj;
+  }catch(e){ return null; }
+}
+
+function qualityFlags(answers, elapsedMs){
+  const flags=[];
+  const counts={};
+  answers.forEach(a=>{ if(a!=null) counts[a]=(counts[a]||0)+1; });
+  const answered = answers.filter(a=>a!=null).length;
+  const maxCount = Math.max(0, ...Object.values(counts));
+  if(answered>0 && maxCount/answered >= 0.85){
+    flags.push('作答分佈高度集中在單一選項（'+maxCount+'/'+answered+' 題相同），建議留意是否充分閱讀每道題目，可於面談中口頭核對部分題項。');
+  }
+  if(elapsedMs!=null){
+    const mins = elapsedMs/60000;
+    if(mins>0 && mins<2.5){
+      flags.push('作答時間僅約 '+mins.toFixed(1)+' 分鐘（共 54 題），明顯低於一般填答所需時間，建議面談時當場核對部分回答內容。');
+    }
+  }
+  return flags;
+}
+
+function formatElapsed(ms){
+  if(ms==null) return '未知';
+  const totalSec=Math.max(0, Math.round(ms/1000));
+  const m=Math.floor(totalSec/60), s=totalSec%60;
+  return m+' 分 '+String(s).padStart(2,'0')+' 秒';
+}
+
+function formatDateTime(ts){
+  if(ts==null) return '未知';
+  const d=new Date(ts);
+  return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+
+let state = {
+  screen: isAdminMode ? 'adminLogin' : 'intro',
+  qIndex:0,
+  name:'',
+  startTime:null,
+  elapsedMs:null,
+  submittedAt:null,
+  answers:new Array(QUESTIONS.length).fill(null),
+  loginError:'',
+  decodeError:'',
+  timerId:null,
+  emailStatus:'',  // 'sending' | 'success' | 'error'
+  emailError:''
+};
+
+function clearQuizTimer(){
+  if(state.timerId){ clearInterval(state.timerId); state.timerId=null; }
+}
+
+function submitQuiz(){
+  clearQuizTimer();
+  state.elapsedMs = state.startTime ? Date.now()-state.startTime : null;
+  state.submittedAt = Date.now();
+  state.screen='thankyou';
+  state.emailStatus='sending'; // 'sending' | 'success' | 'error'
+  state.emailError='';
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+  // 自動寄信
+  sendReportEmail(
+    ()=>{ state.emailStatus='success'; render(); },
+    (err)=>{ state.emailStatus='error'; state.emailError=(err&&err.text)||String(err)||'未知錯誤'; render(); }
+  );
+}
+
+function pentagonPoints(cx,cy,r){
+  const pts=[];
+  for(let i=0;i<5;i++){
+    const a=-Math.PI/2 + i*(2*Math.PI/5);
+    pts.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]);
+  }
+  return pts;
+}
+function ptsStr(pts){ return pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '); }
+
+function computeBigFive(){
+  const sums={}, counts={};
+  DIMENSIONS.forEach(d=>{sums[d.key]=0;counts[d.key]=0;});
+  QUESTIONS.forEach((q,i)=>{
+    if(q.test!=='bigfive') return;
+    const raw=state.answers[i]; if(raw==null) return;
+    const val=q.rev?(6-raw):raw;
+    sums[q.dim]+=val; counts[q.dim]++;
+  });
+  const scores={};
+  DIMENSIONS.forEach(d=>{
+    const avg=sums[d.key]/(counts[d.key]||1);
+    scores[d.key]=Math.round(((avg-1)/4)*100);
+  });
+  return scores;
+}
+
+function computeGuilford(){
+  // dims: depression / cyclothymia / inferiority / aggression / objectivity
+  const dims=['depression','cyclothymia','inferiority','aggression','objectivity'];
+  const sums={}, counts={};
+  dims.forEach(d=>{sums[d]=0;counts[d]=0;});
+  QUESTIONS.forEach((q,i)=>{
+    if(q.test!=='guilford') return;
+    const raw=state.answers[i]; if(raw==null) return;
+    const val=q.rev?(6-raw):raw;
+    sums[q.dim]+=val; counts[q.dim]++;
+  });
+  const scores={};
+  dims.forEach(d=>{
+    const avg=sums[d]/(counts[d]||1);
+    scores[d]=Math.round(((avg-1)/4)*100);
+  });
+  return scores;
+}
+
+function guilfordPersonalityType(bf, gf){
+  // 基氏五種典型判斷（參考 Y-G 量表邏輯）
+  // A型（平均型）：各向度接近中等
+  // B型（暴力型）：情緒不穩 + 攻擊性高 + 外向
+  // C型（偏左/鎮靜型）：情緒穩定 + 社交適應良好 + 內向安靜
+  // D型（右上左下/指導型）：情緒穩定 + 外向活躍 + 攻擊性低 → 領導者
+  // E型（怪癖型）：憂鬱 + 自卑 + 內向 + 情緒不穩
+  const S=bf.stability, E=bf.extraversion, A=bf.agreeable;
+  const dep=gf.depression, cyc=gf.cyclothymia, inf=gf.inferiority,
+        agg=gf.aggression, obj=gf.objectivity;
+  const unstable=(100-S); // 不穩定分數
+
+  if(agg>=65 && unstable>=55 && E>=50){
+    return {type:'B型（暴力型）', desc:'情緒不穩定、攻擊性強、外向衝動。在壓力或衝突情境下容易有激烈反應，需特別評估情緒管理能力與職場適配性。', risk:'high'};
+  }
+  if(dep>=65 && inf>=60 && E<=45 && unstable>=50){
+    return {type:'E型（怪癖型）', desc:'憂鬱傾向明顯、自我評價低、社交退縮、情緒不穩定。在需要主動協作或高強度社交的職務中適配性偏低，建議深入了解心理狀態。', risk:'high'};
+  }
+  if(S>=65 && E>=60 && agg<=40 && obj>=60){
+    return {type:'D型（指導型）', desc:'情緒穩定、積極外向、攻擊性低、客觀理性。具備良好的領導特質，適合需要主動推動與帶領他人的職務。', risk:'low'};
+  }
+  if(S>=60 && E<=45 && agg<=45 && dep<=40){
+    return {type:'C型（鎮靜型）', desc:'情緒穩定、性格安靜內斂、不易衝動。適合需要獨立專注作業的職務，在高壓環境下通常能保持冷靜。', risk:'low'};
+  }
+  return {type:'A型（平均型）', desc:'各項人格特質均衡，沒有特別突出的高風險或高優勢傾向，屬於一般平均型，需搭配其他面向綜合評估。', risk:'normal'};
+}
+
+
+function computeLie(){
+  let total=0, count=0;
+  QUESTIONS.forEach((q,i)=>{
+    if(q.test!=='lie') return;
+    const v=state.answers[i];
+    if(v==null) return;
+    total+=v; count++;
+  });
+  if(count===0) return null;
+  const avg=total/count;
+  const pct=Math.round(((avg-1)/4)*100);
+  let level, label, desc;
+  if(pct>=75){
+    level='high'; label='防衛傾向偏高';
+    desc='作答中有較高比例選擇「社會期待」程度最強的選項，建議面談時對部分自我陳述進行口頭核實，了解實際行為與認知之間的落差。';
+  } else if(pct>=50){
+    level='mid'; label='防衛傾向中等';
+    desc='作答中有一定程度的自我美化傾向，屬常見範圍，建議搭配面談問題深入了解。';
+  } else {
+    level='low'; label='防衛傾向偏低';
+    desc='作答傾向誠實承認自身限制，整體填答可信度較高。';
+  }
+  return {pct, level, label, desc};
+}
+
+function computeMBTI(){
+  const raw={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+  QUESTIONS.forEach((q,i)=>{
+    if(q.test!=='mbti') return;
+    const v=state.answers[i];
+    if(v==null) return;
+    raw[q.pole]+=v;
+  });
+  const pairs=MBTI_PAIRS.map(p=>{
+    const l=raw[p.left], r=raw[p.right], total=(l+r)||1;
+    const leftPct=Math.round(l/total*100);
+    const dominant = l>=r ? p.left : p.right;
+    const merged=Object.assign({}, p);
+    merged.leftPct=leftPct; merged.rightPct=100-leftPct; merged.dominant=dominant;
+    return merged;
+  });
+  const type = pairs.map(p=>p.dominant).join('');
+  return {type, pairs};
+}
+
+function bandOf(s){ return s>=70?'high': s>=40?'mid':'low'; }
+function bandLabel(b){ return b==='high'?'高':b==='mid'?'中':'低'; }
+
+function buildRadarSVG(scores){
+  const cx=170, cy=155, maxR=104;
+  const grids=[0.25,0.5,0.75,1].map(f=>'<polygon class="grid" points="'+ptsStr(pentagonPoints(cx,cy,maxR*f))+'"/>').join('');
+  const axisPts=pentagonPoints(cx,cy,maxR);
+  const axes=axisPts.map(p=>'<line class="axis" x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'"/>').join('');
+  const scorePts=DIMENSIONS.map((d,i)=>{
+    const a=-Math.PI/2+i*(2*Math.PI/5);
+    const r=maxR*(scores[d.key]/100);
+    return [cx+r*Math.cos(a), cy+r*Math.sin(a)];
+  });
+  const poly='<polygon class="score" points="'+ptsStr(scorePts)+'"/>';
+  const dots=DIMENSIONS.map((d,i)=>'<circle cx="'+scorePts[i][0].toFixed(1)+'" cy="'+scorePts[i][1].toFixed(1)+'" r="4" fill="'+d.hex+'"/>').join('');
+  const labelPts=pentagonPoints(cx,cy,maxR*1.26);
+  const labels=DIMENSIONS.map((d,i)=>'<text class="axis-label" x="'+labelPts[i][0].toFixed(1)+'" y="'+labelPts[i][1].toFixed(1)+'" text-anchor="middle" dominant-baseline="middle">'+d.short+'</text>').join('');
+  return '<svg viewBox="0 0 340 320" class="radar">'+grids+axes+poly+dots+labels+'</svg>';
+}
+
+function buildPairRow(p){
+  const desc = p.dominant===p.left ? p.leftDesc : p.rightDesc;
+  return `
+  <div class="pair-card">
+    <div class="pair-labels">
+      <span class="${p.dominant===p.left?'dominant':''}">${p.leftLabel} ${p.leftPct}%</span>
+      <span class="${p.dominant===p.right?'dominant':''}">${p.rightPct}% ${p.rightLabel}</span>
+    </div>
+    <div class="pair-track"><div class="pair-fill" style="width:${p.leftPct}%"></div></div>
+    <p class="pair-desc">${desc}</p>
+  </div>`;
+}
+
+function renderIntro(){
+  return `
+  <div class="sheet">
+    <div class="eyebrow">WORKPLACE STYLE · 工作風格問卷</div>
+    <h1>工作風格問卷</h1>
+    <p class="lede">這份問卷包含一系列關於日常工作習慣與思考方式的描述，請依照您平時的實際狀況作答，沒有對錯之分，也沒有標準答案。</p>
+    <div class="meta-row">
+      <span><b>100</b> 題</span>
+      <span>約 <b>10</b> 分鐘</span>
+      <span>5 選 1 量表</span>
+    </div>
+    <label class="field-label" for="nameInput">您的姓名</label>
+    <input class="field-input" id="nameInput" type="text" placeholder="請輸入姓名" value="${escapeHtml(state.name)}" />
+    <button class="btn btn-primary" id="startBtn" ${state.name.trim()===''?'disabled':''}>開始填答</button>
+    <p class="disclaimer">本問卷為工作風格參考工具，非正式心理評估，結果不會顯示於本頁面。請依您的真實習慣與想法填答。</p>
+  </div>`;
+}
+
+function renderQuiz(){
+  const i=state.qIndex, total=QUESTIONS.length, q=QUESTIONS[i];
+  const answer=state.answers[i];
+  const pct=((i+1)/total*100).toFixed(1);
+  const isLast=i===total-1;
+  const partLabel = '工作風格問卷';
+  const bubbles=LIKERT.map((label,idx)=>{
+    const val=idx+1, selected=answer===val;
+    return `<div class="bubble-col">
+      <button class="bubble" type="button" data-val="${val}" aria-pressed="${selected}" aria-label="${label}">${val}</button>
+      <div class="bubble-label">${label}</div>
+    </div>`;
+  }).join('');
+  const elapsed = state.startTime ? Math.min(Date.now()-state.startTime, QUIZ_LIMIT_MS) : 0;
+  const remaining = Math.max(0, QUIZ_LIMIT_MS - elapsed);
+  const remSec = Math.ceil(remaining/1000);
+  const remMin = Math.floor(remSec/60), remSecPart = remSec%60;
+  const timerStr = String(remMin).padStart(2,'0')+':'+String(remSecPart).padStart(2,'0');
+  const timerPct = (remaining/QUIZ_LIMIT_MS*100).toFixed(1);
+  const urgent = remaining <= 60000;
+  return `
+  <div class="sheet">
+    <div class="part-tag">${partLabel}</div>
+    <div class="progress-row">
+      <span class="progress-label">Q${String(i+1).padStart(2,'0')} / ${total}</span>
+      <span class="progress-label">${pct}%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="timer-row">
+      <span class="timer-label">剩餘時間</span>
+      <span class="timer-display${urgent?' urgent':''}" id="timerDisplay">${timerStr}</span>
+    </div>
+    <div class="timer-track"><div class="timer-fill" id="timerFill" style="width:${timerPct}%"></div></div>
+    <p class="question-text">${q.text}</p>
+    <div class="bubble-row" role="radiogroup" aria-label="作答選項">${bubbles}</div>
+    <div class="nav-row">
+      <button class="btn btn-ghost" id="prevBtn" ${i===0?'disabled':''}>上一題</button>
+      <button class="btn btn-primary" id="nextBtn" ${answer==null?'disabled':''}>${isLast?'完成填答':'下一題'}</button>
+    </div>
+  </div>`;
+}
+
+function renderThankYou(){
+  const greetingName = escapeHtml(state.name.trim() || '您');
+  let statusHtml='';
+  if(state.emailStatus==='sending'){
+    statusHtml=`<p class="copy-note" style="font-size:14px;margin-top:16px;">⏳ 報告傳送中，請稍候…</p>`;
+  } else if(state.emailStatus==='success'){
+    statusHtml=`<p class="copy-note" style="font-size:14px;margin-top:16px;color:#2a7a4b;">✓ 報告已成功寄出，感謝您的填答。</p>`;
+  } else if(state.emailStatus==='error'){
+    statusHtml=`<p class="error-text" style="margin-top:16px;">⚠ 報告寄送失敗（${escapeHtml(state.emailError)}），請通知招募窗口。</p>`;
+  }
+  return `
+  <div class="sheet">
+    <div class="eyebrow">SUBMITTED · 感謝您的填答</div>
+    <h1>問卷已完成</h1>
+    <p class="lede">${greetingName} 您好，感謝您完成本次職場人格特質問卷。您的結果已自動傳送給招募窗口，作為本次應徵流程的參考資料之一，不會在本頁面顯示。</p>
+    ${statusHtml}
+    <p class="disclaimer">若對應徵流程有任何疑問，歡迎與我們聯繫。</p>
+  </div>`;
+}
+
+function renderAdminLogin(){
+  return `
+  <div class="sheet">
+    <div class="eyebrow">ADMIN ONLY · 管理者登入</div>
+    <h1>應試者結果解析</h1>
+    <p class="lede">此頁面僅供招募窗口使用，用於解析應試者完成問卷後產生的結果代碼，呈現完整的人格分析與面談建議。</p>
+    <label class="field-label" for="pwInput">管理密碼</label>
+    <input class="field-input" id="pwInput" type="password" placeholder="請輸入密碼" />
+    ${state.loginError?'<p class="error-text">'+escapeHtml(state.loginError)+'</p>':''}
+    <button class="btn btn-primary" id="loginBtn">登入</button>
+  </div>`;
+}
+
+function renderAdminPaste(){
+  return `
+  <div class="sheet">
+    <div class="eyebrow">ADMIN ONLY · STEP 2</div>
+    <h1>貼上結果代碼</h1>
+    <p class="lede">請將應試者提供的結果代碼完整貼到下方欄位，系統會在本機解析並顯示完整報告，不會上傳至任何伺服器。</p>
+    <label class="field-label" for="codeInput">結果代碼</label>
+    <textarea class="field-input" id="codeInput" placeholder="貼上應試者提供的代碼…"></textarea>
+    ${state.decodeError?'<p class="error-text">'+escapeHtml(state.decodeError)+'</p>':''}
+    <button class="btn btn-primary" id="decodeBtn">解析結果</button>
+  </div>`;
+}
+
+function renderAdminReport(){
+  const scores   = computeBigFive();
+  const gfScores = computeGuilford();
+  const gfType   = guilfordPersonalityType(scores, gfScores);
+  const lie      = computeLie();
+  const mbtiResult = computeMBTI();
+  const mbtiInfo   = MBTI_TYPES[mbtiResult.type];
+  const qaFlags  = qualityFlags(state.answers, state.elapsedMs);
+  const profile  = computeWorkProfile(scores, gfScores, mbtiResult);
+  const special  = computeSpecialFlags(state.answers, gfScores);
+  const top    = DIMENSIONS.reduce((a,b)=> scores[a.key]>=scores[b.key]?a:b);
+  const bottom = DIMENSIONS.reduce((a,b)=> scores[a.key]<=scores[b.key]?a:b);
+  const S = scores.stability;
+  const stabNote = S>=70?'情緒穩定性偏高（'+S+'），壓力下通常能保持冷靜。'
+    :S>=40?'情緒穩定性中等（'+S+'），大多數情境能自我調適，緊湊時期可能有波動。'
+    :'情緒穩定性偏低（'+S+'），對壓力較敏感，高壓環境需特別留意。';
+
+  // ── 基氏人格類型顯示 ──
+  const gfColor = gfType.risk==='high'?'var(--seal)':gfType.risk==='low'?'#3F8F66':'var(--ink-soft)';
+  const gfHtml = `
+    <div style="border:2px solid ${gfColor};padding:14px;margin-bottom:8px;">
+      <div style="font-family:var(--font-mono);font-size:11px;color:${gfColor};letter-spacing:.08em;margin-bottom:6px;">基氏人格類型</div>
+      <div style="font-weight:700;font-size:16px;color:${gfColor};margin-bottom:6px;">${gfType.type}</div>
+      <p style="font-size:13px;margin:0;line-height:1.6;">${gfType.desc}</p>
+    </div>`;
+
+  // ── 六大能力指標 ──
+  const abilityLabels={problemSolving:'問題解決',communication:'溝通協調',
+    timeManagement:'時間管理',stressResist:'抗壓能力',
+    carefulness:'細心謹慎',workStability:'工作穩定性'};
+  const abilityHtml=Object.entries(profile.abilities).map(([k,v])=>{
+    const color=v>=70?'#3F8F66':v>=45?'#C68A2E':'#B5466B';
+    const arrow=v>=70?'▲':v>=45?'—':'▼';
+    return `<div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11.5px;margin-bottom:4px;">
+        <span>${abilityLabels[k]}</span><span style="color:${color};font-weight:700;">${v} ${arrow}</span>
+      </div>
+      <div style="height:6px;background:var(--line);border-radius:3px;">
+        <div style="height:100%;width:${v}%;background:${color};border-radius:3px;"></div>
+      </div></div>`;
+  }).join('');
+
+  // ── 角色傾向 ──
+  const rolesHtml=profile.roles.map(r=>
+    `<li><span class="trait-mark">◆</span><span class="trait-tag">〔角色〕</span><span><b>${r.r}</b>　${r.d}</span></li>`
+  ).join('');
+
+  // ── 職務適配 ──
+  const jobFitHtml=profile.jobFit.map((j,i)=>{
+    const bar=Math.min(j.score,100);
+    const color=bar>=70?'#3F8F66':bar>=50?'#C68A2E':'#B5466B';
+    const rank=['🥇 最適合','🥈','🥉','',''][i]||'';
+    return `<div style="margin-bottom:14px;padding:12px;background:var(--paper);border:1px solid var(--line);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:700;font-size:13.5px;">${rank} ${j.type}</span>
+        <span style="font-family:var(--font-mono);font-size:12px;color:${color};font-weight:700;">${bar}</span>
+      </div>
+      <div style="height:5px;background:var(--line);border-radius:3px;margin-bottom:8px;">
+        <div style="height:100%;width:${bar}%;background:${color};border-radius:3px;"></div>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink);margin:0;line-height:1.6;">${j.note}</p>
+    </div>`;
+  }).join('');
+
+  // ── 環境 ──
+  const envFitHtml=profile.envFit.map(e=>`<li><span class="trait-mark">✓</span><span>${e}</span></li>`).join('');
+  const envCautionHtml=profile.envCaution.map(e=>`<li><span class="trait-mark">△</span><span>${e}</span></li>`).join('');
+
+  // ── 特殊傾向 ──
+  const specialHtml=special.flags.length
+    ?special.flags.map(f=>{
+        const color=f.level==='high'?'var(--seal)':'#C68A2E';
+        const icon=f.level==='high'?'⚠':'◎';
+        return `<li><span class="trait-mark" style="color:${color}">${icon}</span><span class="trait-tag">〔${f.cat}〕</span><span><b>${f.label}</b>　${f.desc}</span></li>`;
+      }).join('')
+    :`<li><span class="trait-mark">✓</span><span>未偵測到明顯的特殊人格傾向（攻擊、憂鬱、偏執、衝動等）。</span></li>`;
+
+  // ── 優勢與追問 ──
+  const strengthHtml=[
+    {mark:'＋',tag:'〔Big Five〕',text:top.strengthPhrase},
+    {mark:'＋',tag:'〔MBTI〕',text:mbtiInfo.strengths[0]},
+    {mark:'＋',tag:'〔MBTI〕',text:mbtiInfo.strengths[1]},
+    {mark:'＋',tag:'〔MBTI〕',text:mbtiInfo.strengths[2]},
+  ].map(it=>`<li><span class="trait-mark">${it.mark}</span><span class="trait-tag">${it.tag}</span><span>${it.text}</span></li>`).join('');
+  const probeHtml=[
+    {mark:'▸',tag:'〔Big Five〕',text:bottom.probe},
+    {mark:'▸',tag:'〔MBTI〕',text:mbtiInfo.watch[0]},
+    {mark:'▸',tag:'〔MBTI〕',text:mbtiInfo.watch[1]},
+  ].map(it=>`<li><span class="trait-mark">${it.mark}</span><span class="trait-tag">${it.tag}</span><span>${it.text}</span></li>`).join('');
+
+  const qaFlagsHtml=qaFlags.length
+    ?qaFlags.map(f=>`<li><span class="trait-mark">⚠</span><span class="trait-tag">〔作答品質〕</span><span>${f}</span></li>`).join('')
+    :`<li><span class="trait-mark">✓</span><span class="trait-tag">〔作答品質〕</span><span>未偵測到明顯的作答異常。</span></li>`;
+
+  const lieHtml=lie?`
+    <div class="section-label">社會期待指標</div>
+    <ul class="trait-list flags"><li>
+      <span class="trait-mark" style="color:${lie.level==='high'?'var(--seal)':lie.level==='mid'?'#C68A2E':'#3F8F66'}">${lie.level==='high'?'⚠':lie.level==='mid'?'◎':'✓'}</span>
+      <span class="trait-tag">〔防衛傾向〕</span>
+      <span><b>${lie.label}</b>（分數：${lie.pct}）　${lie.desc}</span>
+    </li></ul>`:'';
+
+  const cards=DIMENSIONS.map(d=>{
+    const s=scores[d.key],b=bandOf(s);
+    let badge='';
+    if(d.key===top.key) badge='<span class="badge high">★ 突出優勢</span>';
+    else if(d.key===bottom.key) badge='<span class="badge low">💡 面談留意</span>';
+    return `<div class="dim-card">${badge}
+      <div class="dim-head">
+        <div class="dim-name-wrap"><span class="dim-dot" style="background:${d.color}"></span><span class="dim-name">${d.name}</span></div>
+        <span class="dim-score" style="color:${d.color}">${s} · ${bandLabel(b)}</span>
+      </div>
+      <p class="dim-facets">${d.facets}</p>
+      <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${s}%;background:${d.color}"></div></div>
+      <p class="dim-text">${d[b]}</p>
+    </div>`;
+  }).join('');
+
+  // ── 基氏向度細項 ──
+  const gfDimLabels={depression:'憂鬱傾向（D）',cyclothymia:'情緒循環性（C）',
+    inferiority:'自卑傾向（I）',aggression:'攻擊傾向（AG）',objectivity:'客觀性（O）'};
+  const gfNotes={
+    depression:'分數偏高代表情緒低落、缺乏動力傾向明顯；偏低代表情緒正向積極。',
+    cyclothymia:'分數偏高代表情緒起伏大、容易大起大落；偏低代表情緒變化穩定。',
+    inferiority:'分數偏高代表自我評價低、容易退縮；偏低代表自我效能良好。',
+    aggression:'分數偏高代表在受挫時容易有攻擊或報復傾向；偏低代表情緒反應溫和。',
+    objectivity:'分數偏高代表客觀理性、不容易帶入個人情緒；偏低代表容易主觀或疑心。',
+  };
+  const gfCardsHtml=Object.entries(gfScores).map(([k,v])=>{
+    const color=k==='objectivity'?(v>=60?'#3F8F66':v>=35?'#C68A2E':'#B5466B')
+      :(v>=60?'#B5466B':v>=35?'#C68A2E':'#3F8F66');
+    return `<div class="dim-card">
+      <div class="dim-head">
+        <span class="dim-name">${gfDimLabels[k]}</span>
+        <span class="dim-score" style="color:${color}">${v}</span>
+      </div>
+      <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${v}%;background:${color}"></div></div>
+      <p class="dim-text" style="font-size:12px;">${gfNotes[k]}</p>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="sheet">
+    <div class="eyebrow">ADMIN REPORT · 應試者報告</div>
+    <p class="candidate-name">${escapeHtml(state.name)||'（未填寫姓名）'}</p>
+    <p class="candidate-meta">提交時間　${formatDateTime(state.submittedAt)}　・　作答耗時　${formatElapsed(state.elapsedMs)}</p>
+
+    <div class="mbti-headline">
+      <p class="mbti-code">${mbtiResult.type}</p>
+      <p class="mbti-nickname">${mbtiInfo.nickname}</p>
+      <p class="mbti-tagline">${mbtiInfo.tagline}</p>
+    </div>
+
+    <div class="conclusion-box">
+      <p>整合多套模型分析，此應試者 MBTI 傾向為「<b>${mbtiInfo.nickname}</b>」（<b>${mbtiResult.type}</b> 型）：${mbtiInfo.tagline}</p>
+      <p>五大人格中「<b>${top.name}</b>」最為突出——${top.archetypeDesc}</p>
+      <p style="margin-top:8px;font-size:13px;color:var(--ink-soft);">${stabNote}</p>
+    </div>
+
+    <div class="section-label">基氏人格類型判斷</div>
+    ${gfHtml}
+    <p class="disclaimer" style="margin-top:0;font-size:11.5px;">基氏人格類型依五大人格與基氏向度組合推算，僅供參考，不應單獨作為錄用依據。</p>
+
+    <div class="section-label">特殊傾向提醒</div>
+    <ul class="trait-list flags">${specialHtml}</ul>
+    <p class="disclaimer" style="margin-top:0;font-size:11.5px;">本項目依填答推算，僅為輔助觀察，不應單獨作為判斷依據。</p>
+
+    <div class="section-label">六大職場能力指標</div>
+    ${abilityHtml}
+
+    <div class="section-label">組織角色傾向</div>
+    <ul class="trait-list">${rolesHtml}</ul>
+
+    <div class="section-label">職務類型適配建議</div>
+    ${jobFitHtml}
+
+    <div class="section-label">期望的工作環境</div>
+    <ul class="trait-list strengths">${envFitHtml}</ul>
+    <div class="section-label">較不適合的工作環境</div>
+    <ul class="trait-list watch">${envCautionHtml}</ul>
+
+    <div class="section-label">工作優勢</div>
+    <ul class="trait-list strengths">${strengthHtml}</ul>
+
+    <div class="section-label">面談建議追問方向</div>
+    <ul class="trait-list watch">${probeHtml}</ul>
+
+    ${lieHtml}
+
+    <div class="section-label">作答品質提醒</div>
+    <ul class="trait-list flags">${qaFlagsHtml}</ul>
+
+    <div class="section-label">細項分析・五大人格特質</div>
+    ${buildRadarSVG(scores)}
+    ${cards}
+
+    <div class="section-label">細項分析・基氏人格向度</div>
+    ${gfCardsHtml}
+
+    <div class="section-label">細項分析・MBTI 四個向度</div>
+    ${mbtiResult.pairs.map(buildPairRow).join('')}
+
+    <p class="disclaimer">本報告整合 Big Five、基氏人格向度與 MBTI 三套模型，為工作風格參考工具，並非正式心理衡鑑，亦非誠信測驗或測謊工具，不應作為錄用與否的單一依據，建議搭配面談與其他評估方式綜合判斷。</p>
+    <div class="result-actions">
+      <button class="btn btn-ghost btn-small" id="copyBtn">複製報告文字</button>
+      <button class="btn btn-primary btn-small" id="sendEmailBtn">寄送報告至信箱</button>
+      <button class="btn btn-ghost btn-small" id="nextCandidateBtn">解析下一份代碼</button>
+    </div>
+    <div class="copy-note" id="copyNote"></div>
+  </div>`;
+}
+
+
+function buildAdminSummaryText(){
+  const scores   = computeBigFive();
+  const gfScores = computeGuilford();
+  const gfType   = guilfordPersonalityType(scores, gfScores);
+  const lie      = computeLie();
+  const mbtiResult = computeMBTI();
+  const mbtiInfo   = MBTI_TYPES[mbtiResult.type];
+  const profile  = computeWorkProfile(scores, gfScores, mbtiResult);
+  const special  = computeSpecialFlags(state.answers, gfScores);
+  const top    = DIMENSIONS.reduce((a,b)=> scores[a.key]>=scores[b.key]?a:b);
+  const bottom = DIMENSIONS.reduce((a,b)=> scores[a.key]<=scores[b.key]?a:b);
+  const qaFlags= qualityFlags(state.answers, state.elapsedMs);
+  const S=scores.stability;
+  const stabNote=S>=70?'偏高（'+S+'）情緒穩定，適合高壓職務。'
+    :S>=40?'中等（'+S+'）大多能自我調適，緊湊時期可能有波動。'
+    :'偏低（'+S+'）對壓力較敏感，高壓環境需特別留意。';
+
+  let lines=['【工作風格問卷－應試者報告】','',
+    '姓名：'+(state.name||'（未填寫）'),
+    '提交時間：'+formatDateTime(state.submittedAt),
+    '作答耗時：'+formatElapsed(state.elapsedMs),'',
+    '── 基氏人格類型 ──',
+    gfType.type, gfType.desc,'',
+    '── MBTI 類型 ──',
+    mbtiResult.type+'（'+mbtiInfo.nickname+'）', mbtiInfo.tagline,'',
+    '── 五大人格特質 ──'];
+  DIMENSIONS.forEach(d=>{const s=scores[d.key];lines.push('　'+d.name+'：'+s+'（'+bandLabel(bandOf(s))+'）');});
+  lines.push('　情緒穩定度：'+stabNote);
+  lines.push('','── 基氏向度 ──',
+    '　憂鬱傾向：'+gfScores.depression,
+    '　情緒循環性：'+gfScores.cyclothymia,
+    '　自卑傾向：'+gfScores.inferiority,
+    '　攻擊傾向：'+gfScores.aggression,
+    '　客觀性：'+gfScores.objectivity);
+  lines.push('','── 六大職場能力 ──');
+  const al={problemSolving:'問題解決',communication:'溝通協調',timeManagement:'時間管理',
+    stressResist:'抗壓能力',carefulness:'細心謹慎',workStability:'工作穩定性'};
+  Object.entries(profile.abilities).forEach(([k,v])=>lines.push('　'+al[k]+'：'+v));
+  lines.push('','── 職務適配排名 ──');
+  profile.jobFit.forEach((j,i)=>lines.push('　'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':'  ')+' '+j.type+'（'+j.score+'）　'+j.note));
+  lines.push('','── 組織角色傾向 ──');
+  profile.roles.forEach(r=>lines.push('　◆ '+r.r+'　'+r.d));
+  if(special.flags.length){
+    lines.push('','── 特殊傾向提醒 ──');
+    special.flags.forEach(f=>lines.push('　'+(f.level==='high'?'⚠':'◎')+' '+f.label+'　'+f.desc));
+  }
+  lines.push('','── 工作優勢 ──','　＋ '+top.strengthPhrase);
+  mbtiInfo.strengths.forEach(s=>lines.push('　＋ '+s));
+  lines.push('','── 面談建議追問方向 ──','　▸ '+bottom.probe);
+  mbtiInfo.watch.forEach(s=>lines.push('　▸ '+s));
+  if(lie){lines.push('','── 社會期待指標 ──','　'+lie.label+'（'+lie.pct+'）　'+lie.desc);}
+  lines.push('','── 作答品質 ──');
+  if(qaFlags.length){qaFlags.forEach(f=>lines.push('　⚠ '+f));}
+  else{lines.push('　✓ 未偵測到明顯的作答異常。');}
+  lines.push('','本報告僅供面談前參考，非錄用唯一依據。');
+  return lines.join('\n');
+}
+
+
+function sendReportEmail(onSuccess, onError){
+  const reportText = buildAdminSummaryText();
+  const params = {
+    candidate_name : state.name || '（未填寫）',
+    submitted_at   : formatDateTime(state.submittedAt),
+    elapsed        : formatElapsed(state.elapsedMs),
+    report_text    : reportText
+  };
+  // 懶載入 EmailJS SDK（僅在第一次寄信時載入，不影響問卷開啟速度）
+  function doSend(){
+    window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+      .then(() => onSuccess())
+      .catch(err => onError(err));
+  }
+  if(window.emailjs){ doSend(); return; }
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  script.onload = doSend;
+  script.onerror = () => onError(new Error('EmailJS SDK 載入失敗，請確認網路連線'));
+  document.head.appendChild(script);
+}
+
+function computeWorkProfile(scores, gfScores, mbtiResult){
+  const S=scores.stability, A=scores.agreeable, C=scores.conscientious,
+        E=scores.extraversion, O=scores.openness;
+  const dep=gfScores.depression, cyc=gfScores.cyclothymia,
+        inf=gfScores.inferiority, agg=gfScores.aggression, obj=gfScores.objectivity;
+
+  const abilities={
+    problemSolving : Math.round(O*0.40+C*0.35+obj*0.15+S*0.10),
+    communication  : Math.round(E*0.35+A*0.35+S*0.20+(100-agg)*0.10),
+    timeManagement : Math.round(C*0.55+S*0.25+(100-cyc)*0.10+E*0.10),
+    stressResist   : Math.round(S*0.50+C*0.20+(100-dep)*0.20+(100-cyc)*0.10),
+    carefulness    : Math.round(C*0.50+S*0.20+O*0.20+obj*0.10),
+    workStability  : Math.round(S*0.35+C*0.25+(100-dep)*0.20+(100-cyc)*0.15+(100-agg)*0.05),
+  };
+
+  const roles=[];
+  if(E>=65&&S>=60&&agg<=50) roles.push({r:'領導推動者',d:'情緒穩定、積極外向、攻擊性受控，具備帶領團隊的特質，適合主管或專案負責人角色。'});
+  if(A>=65&&E>=50&&obj>=55) roles.push({r:'溝通協調者',d:'親和力高、客觀理性，善於化解衝突與建立共識，是跨部門溝通的天然橋梁。'});
+  if(C>=70&&O<=60&&dep<=45) roles.push({r:'精實執行者',d:'嚴謹自律、細節把關能力強，是可靠的流程守護者，適合需要高度責任感的職務。'});
+  if(O>=65&&E>=50&&cyc<=50) roles.push({r:'創新發想者',d:'思維開放、情緒穩定，擅長提出新觀點與突破框架，適合創意或變革推動型職務。'});
+  if(C>=65&&A>=60&&E<=55&&dep<=45) roles.push({r:'專業顧問型',d:'深度思考、嚴謹分析，擅長在幕後提供高品質建議，適合需要專業判斷的支援角色。'});
+  if(A>=70&&S>=55&&E<=55&&inf<=45) roles.push({r:'支持陪伴者',d:'親和、穩定、自我效能良好，善於傾聽與關懷，適合人資、培訓或輔導角色。'});
+  if(roles.length===0) roles.push({r:'均衡適應者',d:'各向度分佈均衡，能視職務需求彈性調整角色定位。'});
+
+  const jobFit=[
+    {type:'業務／客服／門市',
+     score:Math.round(E*0.30+A*0.25+S*0.25+(100-agg)*0.10+(100-inf)*0.10),
+     note:E>=60&&A>=55&&S>=50&&agg<=55
+       ?'適配度高：外向性與親和性良好，情緒穩定，能主動建立客戶關係並維持服務品質。'
+       :agg>=65?'⚠ 留意：攻擊傾向偏高，在高頻率客訴或衝突情境中的情緒管理需特別確認。'
+       :E<50?'留意：外向性偏低，在需要大量主動開發或持續社交的業務型職務中，能量消耗可能較大。'
+       :'整體適配中等，建議面談時確認其對外互動的意願與表現。'},
+    {type:'研發／工程／技術',
+     score:Math.round(O*0.30+C*0.35+S*0.20+(100-dep)*0.15),
+     note:O>=60&&C>=65&&dep<=45
+       ?'適配度高：開放性與嚴謹性兼備，情緒穩定，能獨立深度作業並持續精進技術能力。'
+       :dep>=65?'⚠ 留意：憂鬱傾向偏高，在需要長時間獨立作業的技術職務中，動力維持需特別關注。'
+       :C<55?'留意：嚴謹性偏低，在需要細節確認與品質管控的技術職務中需特別留意。'
+       :'整體適配中等，建議確認其對獨立作業與技術學習的偏好。'},
+    {type:'後勤行政／人資／財務',
+     score:Math.round(C*0.35+S*0.30+A*0.20+(100-cyc)*0.15),
+     note:C>=70&&S>=55&&cyc<=50
+       ?'適配度高：嚴謹、穩定、情緒不易大起大落，適合需要細心、可靠與高度責任感的後勤職務。'
+       :cyc>=65?'留意：情緒循環性偏高，在需要持續穩定輸出的行政財務類職務中，情緒波動可能影響工作品質。'
+       :C<55?'留意：嚴謹性偏低，在需要高度細節確認與規範遵循的行政財務類職務中可能有落差。'
+       :'整體適配中等，建議確認其對結構化工作的接受度。'},
+    {type:'管理職／主管',
+     score:Math.round(S*0.30+E*0.20+A*0.20+obj*0.15+(100-agg)*0.15),
+     note:S>=65&&E>=55&&obj>=55&&agg<=50
+       ?'適配度高：情緒穩定、具主動性、客觀理性、攻擊性受控，具備帶領團隊的基本特質。'
+       :agg>=65?'⚠ 留意：攻擊傾向偏高，在需要示範情緒管理與帶領他人的管理職中，需審慎評估。'
+       :S<55?'留意：情緒穩定性偏低，在需要持續承壓並帶領團隊的管理職中，自我調適能力需特別確認。'
+       :'整體適配中等，建議面談時確認其領導經驗與團隊管理風格。'},
+    {type:'企劃／行銷／創意',
+     score:Math.round(O*0.35+E*0.30+A*0.20+(100-dep)*0.15),
+     note:O>=65&&E>=50&&dep<=45
+       ?'適配度高：開放性與表達力兼具，情緒穩定，能持續產出創意並有效溝通想法。'
+       :dep>=65?'留意：憂鬱傾向偏高，在需要持續創意輸出與積極展現的企劃行銷職務中，動力維持需關注。'
+       :O<55?'留意：開放性偏低，在需要持續創新與接受模糊任務的企劃類職務中可能較不適應。'
+       :'整體適配中等，建議確認其創意表現方式與溝通風格。'},
+  ];
+  jobFit.sort((a,b)=>b.score-a.score);
+
+  const envFit=[];
+  if(S>=65) envFit.push('可承受高壓與緊湊節奏的工作環境');
+  if(C>=70) envFit.push('有明確規則、流程與目標的結構化環境');
+  if(E>=65) envFit.push('需要大量對外互動與溝通的外向型環境');
+  if(O>=65) envFit.push('鼓勵創新、允許嘗試的開放型環境');
+  if(A>=65&&E<=60) envFit.push('合作氣氛良好、衝突少的和諧型環境');
+  if(E<=40) envFit.push('能獨立作業、減少頻繁打擾的專注型環境');
+  if(envFit.length===0) envFit.push('對多種工作環境均有一定適應能力');
+
+  const envCaution=[];
+  if(S<=45||dep>=65) envCaution.push('長期高壓、頻繁衝突或缺乏支持的高壓職務');
+  if(C<=40) envCaution.push('需要嚴格遵守細節、高度重複執行標準流程的職務');
+  if(E<=35) envCaution.push('需要持續主動對外開發或高頻社交的業務類職務');
+  if(O<=35) envCaution.push('需要大量創新發想、快速因應變化的新創型職務');
+  if(agg>=65) envCaution.push('頻繁衝突、高強度競爭或需要高度情緒克制的服務型職務');
+  if(envCaution.length===0) envCaution.push('未偵測到明顯不適配的環境類型');
+
+  return {abilities, roles, jobFit, envFit, envCaution};
+}
+
+
+function computeSpecialFlags(answers, gfScores){
+  const calc=(flagName)=>{
+    let sum=0,count=0;
+    QUESTIONS.forEach((q,i)=>{
+      const v=answers[i]; if(v==null||q.flag!==flagName) return;
+      const val=q.rev?v:(6-v); sum+=val; count++;
+    });
+    return count>0?Math.round(((sum/count)-1)/4*100):0;
+  };
+  const impulsePct   = calc('impulse');
+  const sensitivePct = calc('sensitive');
+  const paranoidPct  = calc('paranoid');
+  const aggPct       = gfScores.aggression;
+  const depPct       = gfScores.depression;
+  const infPct       = gfScores.inferiority;
+
+  const flags=[];
+  if(aggPct>=70)
+    flags.push({level:'high',cat:'攻擊傾向',label:'⚠ 攻擊傾向偏高',
+      desc:'填答顯示在受到刺激時有較強的攻擊或報復傾向，可能在衝突情境下做出強烈反應。建議面談時評估其情緒管理方式，並審慎評估是否適合需要頻繁處理衝突的職務。'});
+  else if(aggPct>=55)
+    flags.push({level:'mid',cat:'攻擊傾向',label:'攻擊傾向中等偏高',
+      desc:'在受到挫折或不公平對待時，可能有較明顯的情緒反應，建議面談時觀察其壓力應對方式。'});
+
+  if(impulsePct>=70)
+    flags.push({level:'high',cat:'衝動控制',label:'衝動控制需留意',
+      desc:'填答顯示在情緒高漲或受到刺激時，較難立即克制反應，有時可能說出或做出事後後悔的行為。'});
+  else if(impulsePct>=50)
+    flags.push({level:'mid',cat:'衝動控制',label:'衝動傾向中等',
+      desc:'偶爾在壓力下可能有較直接的情緒反應，屬一般範圍，建議觀察面談當下的情緒管理表現。'});
+
+  if(depPct>=70)
+    flags.push({level:'high',cat:'憂鬱傾向',label:'⚠ 憂鬱傾向偏高',
+      desc:'填答顯示有明顯的情緒低落、無意義感或孤立感，可能影響工作動力與穩定性。建議面談時關注其情緒狀態，並評估職務壓力強度的適配性。'});
+  else if(depPct>=55)
+    flags.push({level:'mid',cat:'憂鬱傾向',label:'憂鬱傾向中等',
+      desc:'有一定程度的情緒低潮傾向，在高壓或孤立的工作環境中可能加重，建議留意工作環境的支持性。'});
+
+  if(infPct>=70)
+    flags.push({level:'high',cat:'自卑傾向',label:'自我效能偏低',
+      desc:'填答顯示對自身能力的評估較為悲觀，容易在需要表現的場合退縮。在需要主動展現能力或承擔責任的職務中，可能需要更多支持與鼓勵。'});
+
+  if(paranoidPct>=70)
+    flags.push({level:'high',cat:'偏執傾向',label:'⚠ 疑心／偏執傾向偏高',
+      desc:'填答顯示對他人動機有較高的懷疑傾向，容易感覺被針對。在需要高度信任的團隊合作職務中適配性偏低，強烈建議面談時深入評估人際互動模式。'});
+  else if(paranoidPct>=55)
+    flags.push({level:'mid',cat:'偏執傾向',label:'偏執傾向中等偏高',
+      desc:'對人際關係有一定程度的謹慎或防衛，在競爭性環境中可能加重，建議面談時留意其敘述他人的方式。'});
+
+  if(sensitivePct>=70)
+    flags.push({level:'high',cat:'人際敏感',label:'人際敏感度偏高',
+      desc:'對他人的評價與言行反應較為敏銳，容易在人際互動中感到不安。在需要頻繁接受外部評價的職務中需特別留意。'});
+
+  return {flags, impulsePct, sensitivePct, paranoidPct, aggPct, depPct, infPct};
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(state.screen==='intro') app.innerHTML=renderIntro();
+  else if(state.screen==='quiz') app.innerHTML=renderQuiz();
+  else if(state.screen==='thankyou') app.innerHTML=renderThankYou();
+  else if(state.screen==='adminLogin') app.innerHTML=renderAdminLogin();
+  else if(state.screen==='adminPaste') app.innerHTML=renderAdminPaste();
+  else app.innerHTML=renderAdminReport();
+  bind();
+}
+
+function bind(){
+  if(state.screen==='intro'){
+    const nameInput=document.getElementById('nameInput');
+    const startBtn=document.getElementById('startBtn');
+    nameInput.addEventListener('input',()=>{
+      state.name=nameInput.value;
+      startBtn.disabled=state.name.trim()==='';
+    });
+    startBtn.addEventListener('click',()=>{
+      if(state.name.trim()==='') return;
+      state.startTime=Date.now();
+      state.screen='quiz'; state.qIndex=0; render();
+    });
+  } else if(state.screen==='quiz'){
+    document.querySelectorAll('.bubble').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        state.answers[state.qIndex]=parseInt(btn.dataset.val,10);
+        render();
+      });
+    });
+    document.getElementById('prevBtn').addEventListener('click',()=>{
+      if(state.qIndex>0){ state.qIndex--; render(); }
+    });
+    document.getElementById('nextBtn').addEventListener('click',()=>{
+      if(state.answers[state.qIndex]==null) return;
+      if(state.qIndex<QUESTIONS.length-1){ state.qIndex++; render(); }
+      else { submitQuiz(); }
+    });
+    clearQuizTimer();
+    state.timerId=setInterval(()=>{
+      const elapsed=state.startTime?Date.now()-state.startTime:0;
+      const remaining=Math.max(0,QUIZ_LIMIT_MS-elapsed);
+      const remSec=Math.ceil(remaining/1000);
+      const remMin=Math.floor(remSec/60),remSecPart=remSec%60;
+      const timerStr=String(remMin).padStart(2,'0')+':'+String(remSecPart).padStart(2,'0');
+      const timerPct=(remaining/QUIZ_LIMIT_MS*100).toFixed(1);
+      const urgent=remaining<=60000;
+      const disp=document.getElementById('timerDisplay');
+      const fill=document.getElementById('timerFill');
+      if(disp){ disp.textContent=timerStr; disp.className='timer-display'+(urgent?' urgent':''); }
+      if(fill){ fill.style.width=timerPct+'%'; }
+      if(remaining<=0){ submitQuiz(); }
+    },1000);
+  } else if(state.screen==='thankyou'){
+    clearQuizTimer();
+  } else if(state.screen==='adminLogin'){
+    document.getElementById('loginBtn').addEventListener('click',()=>{
+      const val=document.getElementById('pwInput').value;
+      if(val===ADMIN_PASSWORD){ state.loginError=''; state.screen='adminPaste'; }
+      else { state.loginError='密碼不正確，請重新輸入。'; }
+      render();
+    });
+  } else if(state.screen==='adminPaste'){
+    document.getElementById('decodeBtn').addEventListener('click',()=>{
+      const raw=document.getElementById('codeInput').value;
+      const obj=decodeResult(raw);
+      if(!obj){ state.decodeError='代碼格式錯誤或不完整，請確認完整複製貼上。'; render(); return; }
+      state.decodeError='';
+      state.name=obj.n||'';
+      state.elapsedMs=obj.e||null;
+      state.submittedAt=obj.t||null;
+      state.answers=obj.a;
+      state.screen='adminReport';
+      render(); window.scrollTo({top:0,behavior:'smooth'});
+    });
+  } else {
+    document.getElementById('nextCandidateBtn').addEventListener('click',()=>{
+      state.decodeError=''; state.answers=new Array(QUESTIONS.length).fill(null);
+      state.name=''; state.elapsedMs=null; state.submittedAt=null;
+      state.screen='adminPaste'; render(); window.scrollTo({top:0,behavior:'smooth'});
+    });
+    document.getElementById('copyBtn').addEventListener('click',()=>{
+      const text=buildAdminSummaryText();
+      const note=document.getElementById('copyNote');
+      navigator.clipboard.writeText(text).then(()=>{
+        note.textContent='已複製到剪貼簿';
+        setTimeout(()=>note.textContent='',2200);
+      }).catch(()=>{ note.textContent='複製失敗，請手動選取文字'; });
+    });
+    document.getElementById('sendEmailBtn').addEventListener('click',()=>{
+      const btn=document.getElementById('sendEmailBtn');
+      const note=document.getElementById('copyNote');
+      if(!EMAILJS_PUBLIC_KEY||!EMAILJS_SERVICE_ID||!EMAILJS_TEMPLATE_ID){
+        note.textContent='⚠ 尚未填入 EmailJS 設定。'; return;
+      }
+      btn.disabled=true; btn.textContent='寄送中…'; note.textContent='';
+      sendReportEmail(
+        ()=>{ btn.textContent='✓ 已寄出'; note.textContent='報告已成功寄送至您的信箱';
+          setTimeout(()=>{ btn.disabled=false; btn.textContent='寄送報告至信箱'; note.textContent=''; },4000); },
+        (err)=>{ btn.disabled=false; btn.textContent='寄送報告至信箱';
+          note.textContent='⚠ 寄送失敗：'+(err&&err.text||err||'未知錯誤'); }
+      );
+    });
+  }
+}
+
+render();
+</script>
+</body>
+</html>
