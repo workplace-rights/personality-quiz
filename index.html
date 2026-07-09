@@ -525,17 +525,62 @@ function qualityFlags(answers, elapsedMs){
   const counts={};
   answers.forEach(a=>{ if(a!=null) counts[a]=(counts[a]||0)+1; });
   const answered = answers.filter(a=>a!=null).length;
+  const totalQ = QUESTIONS.length;
   const maxCount = Math.max(0, ...Object.values(counts));
+
+  // 未完成作答偵測（依向度分類統計缺答）
+  const missing = totalQ - answered;
+  if(missing>0){
+    // 統計各面向缺答數
+    const dimLabels={
+      stability:'情緒穩定性', agreeable:'親和性', conscientious:'嚴謹性',
+      extraversion:'外向性', openness:'開放性',
+      depression:'情緒動力', cyclothymia:'情緒穩定度', inferiority:'自我效能',
+      aggression:'情緒反應強度', objectivity:'客觀判斷力'
+    };
+    const missByDim={};
+    QUESTIONS.forEach((q,i)=>{
+      if(answers[i]==null){
+        const key = q.test==='mbti' ? 'MBTI性格傾向'
+          : q.test==='lie' ? '社會期待量表'
+          : (dimLabels[q.dim]||q.dim||'其他');
+        missByDim[key]=(missByDim[key]||0)+1;
+      }
+    });
+    const detail = Object.entries(missByDim).map(([k,v])=>k+' '+v+'題').join('、');
+    let impact;
+    if(missing<=3) impact='缺答題數少（'+missing+'題），對整體結果影響輕微，報告仍具參考價值。';
+    else if(missing<=8) impact='缺答題數中等（'+missing+'題），相關面向的分數可能略有偏差，建議面談時對缺答較多的面向多加確認。';
+    else impact='缺答題數較多（'+missing+'題，約佔全部的'+Math.round(missing/totalQ*100)+'%），部分面向的分數可信度會下降，建議請應試者補填或於面談時重點確認。';
+    flags.push('⚠ 未完整作答：缺 '+missing+' 題（'+detail+'）。'+impact);
+  }
+
   if(answered>0 && maxCount/answered >= 0.85){
     flags.push('作答分佈高度集中在單一選項（'+maxCount+'/'+answered+' 題相同），建議留意是否充分閱讀每道題目，可於面談中口頭核對部分題項。');
   }
   if(elapsedMs!=null){
     const mins = elapsedMs/60000;
-    if(mins>0 && mins<2.5){
-      flags.push('作答時間僅約 '+mins.toFixed(1)+' 分鐘（共 54 題），明顯低於一般填答所需時間，建議面談時當場核對部分回答內容。');
+    if(mins>0 && mins < totalQ*0.05){
+      flags.push('作答時間僅約 '+mins.toFixed(1)+' 分鐘（共 '+totalQ+' 題），明顯低於一般填答所需時間，建議面談時當場核對部分回答內容。');
     }
   }
   return flags;
+}
+
+// 內部一致性偵測：五大人格與基氏向度若互相矛盾，提示面談者
+function consistencyCheck(scores, gfScores){
+  const notes=[];
+  // 情緒穩定性高，但憂鬱/自卑/攻擊也高 → 矛盾
+  const S=scores.stability;
+  if(S>=65){
+    if(gfScores.depression>=55)
+      notes.push('情緒穩定性偏高，但憂鬱傾向題目卻得分偏高，兩者略有矛盾，可能反映填答時對不同題型理解不一，或情緒狀態較複雜，建議面談時實際確認其近期情緒與工作動力。');
+    if(gfScores.inferiority>=55)
+      notes.push('情緒穩定性偏高，但自我效能題目得分偏低，兩者略有落差，建議面談時了解其在不同情境下的自信程度是否有差異。');
+    if(gfScores.aggression>=55)
+      notes.push('情緒穩定性偏高，但情緒反應強度題目得分偏高，建議面談時確認其在受挫或衝突情境下的實際反應。');
+  }
+  return notes;
 }
 
 function formatElapsed(ms){
@@ -852,6 +897,7 @@ function renderAdminReport(){
   const mbtiResult = computeMBTI();
   const mbtiInfo   = MBTI_TYPES[mbtiResult.type];
   const qaFlags  = qualityFlags(state.answers, state.elapsedMs);
+  const consistency = consistencyCheck(scores, gfScores);
   const profile  = computeWorkProfile(scores, gfScores, mbtiResult);
   const special  = computeSpecialFlags(state.answers, gfScores);
   const top    = DIMENSIONS.reduce((a,b)=> scores[a.key]>=scores[b.key]?a:b);
@@ -943,9 +989,10 @@ function renderAdminReport(){
     {mark:'▸',tag:'〔MBTI〕',text:mbtiInfo.watch[1]},
   ].map(it=>`<li><span class="trait-mark">${it.mark}</span><span class="trait-tag">${it.tag}</span><span>${it.text}</span></li>`).join('');
 
-  const qaFlagsHtml=qaFlags.length
-    ?qaFlags.map(f=>`<li><span class="trait-mark">⚠</span><span class="trait-tag">〔作答品質〕</span><span>${f}</span></li>`).join('')
-    :`<li><span class="trait-mark">✓</span><span class="trait-tag">〔作答品質〕</span><span>未偵測到明顯的作答異常。</span></li>`;
+  const consistencyLines = consistency.map(c=>`<li><span class="trait-mark" style="color:#C68A2E">◎</span><span class="trait-tag">〔一致性〕</span><span>${c}</span></li>`).join('');
+  const qaFlagsHtml=(qaFlags.length||consistency.length)
+    ?(qaFlags.map(f=>`<li><span class="trait-mark">${f.startsWith('⚠')?'':'⚠'}</span><span class="trait-tag">〔作答品質〕</span><span>${f.replace(/^⚠\s*/,'')}</span></li>`).join('') + consistencyLines)
+    :`<li><span class="trait-mark">✓</span><span class="trait-tag">〔作答品質〕</span><span>作答完整，未偵測到明顯的作答異常或內部矛盾。</span></li>`;
 
   const lieHtml=lie?`
     <div class="section-label">社會期待指標（填答誠實度參考）</div>
@@ -1129,6 +1176,7 @@ function buildAdminSummaryText(){
   const top    = DIMENSIONS.reduce((a,b)=> scores[a.key]>=scores[b.key]?a:b);
   const bottom = DIMENSIONS.reduce((a,b)=> scores[a.key]<=scores[b.key]?a:b);
   const qaFlags= qualityFlags(state.answers, state.elapsedMs);
+  const consistency = consistencyCheck(scores, gfScores);
   const S=scores.stability;
   const stabNote=S>=70?'偏高（'+S+'）情緒穩定，適合高壓職務。'
     :S>=40?'中等（'+S+'）大多能自我調適，緊湊時期可能有波動。'
@@ -1219,9 +1267,10 @@ function buildAdminSummaryText(){
       '　'+lieAction);
   }
 
-  lines.push('','── 作答品質 ──');
-  if(qaFlags.length){qaFlags.forEach(f=>lines.push('　⚠ '+f));}
-  else{lines.push('　✓ 未偵測到明顯的作答異常。');}
+  lines.push('','── 作答品質與一致性 ──');
+  if(qaFlags.length){qaFlags.forEach(f=>lines.push('　'+(f.startsWith('⚠')?'':'⚠ ')+f));}
+  if(consistency.length){consistency.forEach(c=>lines.push('　◎ 內部一致性：'+c));}
+  if(!qaFlags.length && !consistency.length){lines.push('　✓ 作答完整，未偵測到明顯的作答異常或內部矛盾。');}
   lines.push('','本報告僅供面談前參考，非錄用唯一依據。');
   return lines.join('\n');
 }
@@ -1352,7 +1401,7 @@ function computeSpecialFlags(answers, gfScores){
 
   const flags=[];
   if(aggPct>=70)
-    flags.push({level:'high',cat:'攻擊傾向',label:'⚠ 攻擊傾向偏高',
+    flags.push({level:'high',cat:'攻擊傾向',label:'攻擊傾向偏高',
       desc:'填答顯示在受到刺激時有較強的攻擊或報復傾向，可能在衝突情境下做出強烈反應。建議面談時評估其情緒管理方式，並審慎評估是否適合需要頻繁處理衝突的職務。'});
   else if(aggPct>=55)
     flags.push({level:'mid',cat:'攻擊傾向',label:'攻擊傾向中等偏高',
@@ -1366,7 +1415,7 @@ function computeSpecialFlags(answers, gfScores){
       desc:'偶爾在壓力下可能有較直接的情緒反應，屬一般範圍，建議觀察面談當下的情緒管理表現。'});
 
   if(depPct>=70)
-    flags.push({level:'high',cat:'憂鬱傾向',label:'⚠ 憂鬱傾向偏高',
+    flags.push({level:'high',cat:'憂鬱傾向',label:'憂鬱傾向偏高',
       desc:'填答顯示有明顯的情緒低落、無意義感或孤立感，可能影響工作動力與穩定性。建議面談時關注其情緒狀態，並評估職務壓力強度的適配性。'});
   else if(depPct>=55)
     flags.push({level:'mid',cat:'憂鬱傾向',label:'憂鬱傾向中等',
@@ -1377,7 +1426,7 @@ function computeSpecialFlags(answers, gfScores){
       desc:'填答顯示對自身能力的評估較為悲觀，容易在需要表現的場合退縮。在需要主動展現能力或承擔責任的職務中，可能需要更多支持與鼓勵。'});
 
   if(paranoidPct>=70)
-    flags.push({level:'high',cat:'偏執傾向',label:'⚠ 疑心／偏執傾向偏高',
+    flags.push({level:'high',cat:'偏執傾向',label:'疑心／偏執傾向偏高',
       desc:'填答顯示對他人動機有較高的懷疑傾向，容易感覺被針對。在需要高度信任的團隊合作職務中適配性偏低，強烈建議面談時深入評估人際互動模式。'});
   else if(paranoidPct>=55)
     flags.push({level:'mid',cat:'偏執傾向',label:'偏執傾向中等偏高',
